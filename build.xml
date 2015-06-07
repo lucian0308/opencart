@@ -2,7 +2,7 @@
 <project name="OpenCart" default="build" basedir=".">
     <property name="source" value="upload"/>
     
-    <condition property="script-suffix" value=".cmd" else="">
+    <condition property="script-preffix" value="cmd /c " else="">
         <os family="windows" />
     </condition>
 
@@ -33,13 +33,13 @@
             <include name="**/*.css" />
         </fileset>
         <pathconvert pathsep=" " property="cssfiles.clean" refid="cssfiles.raw" />
-        <exec executable="csslint${script-suffix}" output="${basedir}/tests/csslint.xml">
+        <exec executable="${script-preffix}csslint" output="${basedir}/tests/csslint.xml">
             <arg line="--warnings=box-model,floats --errors=ids,important --format=lint-xml ${cssfiles.clean}" />
         </exec>
     </target>
 
     <target name="phploc" description="Measure project size using PHPLOC">
-        <exec executable="phploc${script-suffix}">
+        <exec executable="${script-preffix}phploc">
             <arg value="--log-csv"/>
             <arg value="${basedir}/tests/logs/phploc.csv"/>
             <arg path="${basedir}/upload"/>
@@ -47,7 +47,7 @@
     </target>
 
     <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
-        <exec executable="phpcs${script-suffix}">
+        <exec executable="${script-preffix}phpcs">
             <arg line="--report=checkstyle --report-file=${basedir}/tests/checkstyle.xml --standard=tests/phpcs/OpenCart/ruleset.xml --extensions=php ${source}/"/>
         </exec>
     </target>
