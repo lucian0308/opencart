@@ -2,7 +2,7 @@
 <project name="OpenCart" default="build" basedir=".">
     <property name="source" value="upload"/>
     
-    <condition property="script-suffix" value=".bat" else="">
+    <condition property="script-suffix" value=".cmd" else="">
         <os family="windows" />
     </condition>
 
