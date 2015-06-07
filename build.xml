@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="OpenCart" default="build" basedir=".">
     <property name="source" value="upload"/>
+    
+    <condition property="script-suffix" value=".bat" else="">
+        <os family="windows" />
+    </condition>
 
     <target name="clean" description="Cleanup build artifacts">
         <delete dir="${basedir}/tests/docs"/>
