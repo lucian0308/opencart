@@ -51,3 +51,8 @@
 
 # IDE Project files
 /.idea
+
+/cache.properties
+/build/*
+!/build/phpmd.xml
+
