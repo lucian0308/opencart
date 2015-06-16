@@ -47,3 +47,7 @@
 # Ignore all vendor files included by composer and the lock file
 /tests/phpunit/vendor/*
 /tests/phpunit/composer.lock
+
+/cache.properties
+/build/*
+!/build/phpmd.xml
