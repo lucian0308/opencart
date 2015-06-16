@@ -6,7 +6,8 @@ class ControllerMaxmind extends Controller {
 		$db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `config_fraud_status_id` = '1', `config_fraud_score` = '" . (int)$this->request->post['config_fraud_score'] . "', `config_fraud_key` = '" . $db->escape($this->request->post['config_fraud_score']) . "', `config_fraud_detection` = '" . (int)$this->request->post['config_fraud_detection'] . "' WHERE `store_id` = '0' AND `code` = 'config'");
+			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `config_fraud_status_id` = '1', `config_fraud_score` = '" . (int)$this->request->post['config_fraud_score'] . "', `config_fraud_key` = '" . $db->escape($this->request->post['config_fraud_score']) . "', `config_fraud_detection` = '" . (int)$this->request->post['config_fraud_detection'] . "' " 
+ . " WHERE `store_id` = '0' AND `code` = 'config'");
 
 			$this->session->data['success'] = $this->language->get('text_maxmind_success');
 
@@ -50,7 +51,9 @@ class ControllerMaxmind extends Controller {
 				$data['config_fraud_score'] = '80';
 			}
 
-			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE language_id = '1'  ORDER BY name ASC")->rows;
+			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status " 
+ . " WHERE language_id = '1'  " 
+ . " ORDER BY name ASC")->rows;
 
 			if (isset($this->request->post['config_fraud_status_id'])) {
 				$data['config_fraud_status_id'] = $this->request->post['config_fraud_status_id'];

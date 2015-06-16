@@ -5,7 +5,8 @@ class ModelPaymentWorldpay extends Model {
 	public function getMethod($address, $total) {
 		$this->load->language('payment/worldpay');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('worldpay_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone " 
+ . " WHERE geo_zone_id = '" . (int)$this->config->get('worldpay_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		if ($this->config->get('worldpay_total') > 0 && $this->config->get('worldpay_total') > $total) {
 			$status = false;
@@ -33,7 +34,8 @@ class ModelPaymentWorldpay extends Model {
 
 	public function getCards($customer_id) {
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_card WHERE customer_id = '" . (int)$customer_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_card " 
+ . " WHERE customer_id = '" . (int)$customer_id . "'");
 
 		$card_data = array();
 
@@ -58,7 +60,8 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	public function deleteCard($token) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "worldpay_card WHERE customer_id = '" . $this->customer->isLogged() . "' AND token = '" . $this->db->escape($token) . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "worldpay_card " 
+ . " WHERE customer_id = '" . $this->customer->isLogged() . "' AND token = '" . $this->db->escape($token) . "'");
 
 		if ($this->db->countAffected() > 0) {
 			return true;
@@ -74,7 +77,8 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "worldpay_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "worldpay_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		if ($qry->num_rows) {
 			$order = $qry->row;
@@ -91,7 +95,8 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	public function getTransactions($worldpay_order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "worldpay_order_transaction` WHERE `worldpay_order_id` = '" . (int)$worldpay_order_id . "'");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "worldpay_order_transaction` " 
+ . " WHERE `worldpay_order_id` = '" . (int)$worldpay_order_id . "'");
 
 		if ($qry->num_rows) {
 			return $qry->rows;
@@ -283,11 +288,13 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	private function updateRecurringOrder($order_recurring_id, $next_payment) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "worldpay_order_recurring` SET `next_payment` = '" . $next_payment . "', `date_modified` = now() WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "worldpay_order_recurring` SET `next_payment` = '" . $next_payment . "', `date_modified` = now() " 
+ . " WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "'");
 	}
 
 	private function getRecurringOrder($order_recurring_id) {
-		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_order_recurring WHERE order_recurring_id = '" . (int)$order_recurring_id . "'");
+		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_order_recurring " 
+ . " WHERE order_recurring_id = '" . (int)$order_recurring_id . "'");
 		return $qry->row;
 	}
 
@@ -296,11 +303,8 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	private function getProfiles() {
-		$sql = "
-			SELECT `or`.order_recurring_id
-			FROM `" . DB_PREFIX . "order_recurring` `or`
-			JOIN `" . DB_PREFIX . "order` `o` USING(`order_id`)
-			WHERE o.payment_code = 'worldpay'";
+		$sql = " SELECT `or`.order_recurring_id FROM `" . DB_PREFIX . "order_recurring` `or` JOIN `" . DB_PREFIX . "order` `o` USING(`order_id`) " 
+ . " WHERE o.payment_code = 'worldpay'";
 
 		$qry = $this->db->query($sql);
 
@@ -313,17 +317,20 @@ class ModelPaymentWorldpay extends Model {
 	}
 
 	private function getProfile($order_recurring_id) {
-		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_recurring WHERE order_recurring_id = " . (int)$order_recurring_id);
+		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_recurring " 
+ . " WHERE order_recurring_id = " . (int)$order_recurring_id);
 		return $qry->row;
 	}
 
 	public function getWorldpayOrder($worldpay_order_id) {
-		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_order WHERE order_code = " . (int)$worldpay_order_id);
+		$qry = $this->db->query("SELECT * FROM " . DB_PREFIX . "worldpay_order " 
+ . " WHERE order_code = " . (int)$worldpay_order_id);
 		return $qry->row;
 	}
 
 	public function updateCronJobRunTime() {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `code` = 'worldpay' AND `key` = 'worldpay_last_cron_job_run'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` " 
+ . " WHERE `code` = 'worldpay' AND `key` = 'worldpay_last_cron_job_run'");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`store_id`, `code`, `key`, `value`, `serialized`) VALUES (0, 'worldpay', 'worldpay_last_cron_job_run', NOW(), 0)");
 	}
 

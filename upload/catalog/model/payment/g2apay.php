@@ -4,7 +4,8 @@ class ModelPaymentG2APay extends Model {
 	public function getMethod($address, $total) {
 		$this->load->language('payment/g2apay');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('g2apay_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone " 
+ . " WHERE geo_zone_id = '" . (int)$this->config->get('g2apay_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		if ($this->config->get('g2apay_total') > 0 && $this->config->get('g2apay_total') > $total) {
 			$status = false;
@@ -35,7 +36,8 @@ class ModelPaymentG2APay extends Model {
 	}
 
 	public function updateOrder($g2apay_order_id, $g2apay_transaction_id, $type, $order_info) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "g2apay_order` SET `g2apay_transaction_id` = '" . $this->db->escape($g2apay_transaction_id) . "', `modified` = now() WHERE `order_id` = '" . (int)$order_info['order_id'] . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "g2apay_order` SET `g2apay_transaction_id` = '" . $this->db->escape($g2apay_transaction_id) . "', `modified` = now() " 
+ . " WHERE `order_id` = '" . (int)$order_info['order_id'] . "'");
 
 		$this->addTransaction($g2apay_order_id, $type, $order_info);
 
@@ -46,7 +48,8 @@ class ModelPaymentG2APay extends Model {
 	}
 
 	public function getG2aOrder($order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "g2apay_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "g2apay_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		if ($qry->num_rows) {
 			return $qry->row;

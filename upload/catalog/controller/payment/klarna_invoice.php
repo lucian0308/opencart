@@ -140,7 +140,8 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$data['iso_code_3'] = $order_info['payment_iso_code_3'];
 
 			// Get the invoice fee
-			$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "order_total` WHERE `order_id` = " . (int)$order_info['order_id'] . " AND `code` = 'klarna_fee'");
+			$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "order_total` " 
+ . " WHERE `order_id` = " . (int)$order_info['order_id'] . " AND `code` = 'klarna_fee'");
 
 			if ($query->num_rows && !$query->row['value']) {
 				$data['klarna_fee'] = $query->row['value'];
@@ -272,7 +273,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					'country'         => $country,
 				);
 
-				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = " . (int)$order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` WHERE `order_id` = " . (int)$order_info['order_id']);
+				$product_query = $this->db->query("SELECT `name`, `model`, `price`, `quantity`, `tax` / `price` * 100 AS 'tax_rate' FROM `" . DB_PREFIX . "order_product` " 
+ . " WHERE `order_id` = " . (int)$order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM `" . DB_PREFIX . "order_voucher` " 
+ . " WHERE `order_id` = " . (int)$order_info['order_id']);
 
 				foreach ($product_query->rows as $product) {
 					$goods_list[] = array(

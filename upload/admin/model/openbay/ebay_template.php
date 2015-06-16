@@ -6,11 +6,13 @@ class ModelOpenbayEbayTemplate extends Model {
 	}
 
 	public function edit($id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "ebay_template` SET `name` = '" . $this->db->escape($data['name']) . "', `html` = '" . $this->db->escape($data['html']) . "' WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
+		$this->db->query("UPDATE `" . DB_PREFIX . "ebay_template` SET `name` = '" . $this->db->escape($data['name']) . "', `html` = '" . $this->db->escape($data['html']) . "' " 
+ . " WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
 	}
 
 	public function delete($id) {
-		$qry = $this->db->query("DELETE FROM `" . DB_PREFIX . "ebay_template` WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
+		$qry = $this->db->query("DELETE FROM `" . DB_PREFIX . "ebay_template` " 
+ . " WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
 
 		if ($qry->countAffected() > 0) {
 			return true;
@@ -20,7 +22,8 @@ class ModelOpenbayEbayTemplate extends Model {
 	}
 
 	public function get($id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "ebay_template` WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "ebay_template` " 
+ . " WHERE `template_id` = '" . (int)$id . "' LIMIT 1");
 
 		if ($qry->num_rows) {
 			$row = $qry->row;

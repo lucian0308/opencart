@@ -1,7 +1,9 @@
 <?php
 class ModelReportAffiliate extends Model {
 	public function getCommission($data = array()) {
-		$sql = "SELECT at.affiliate_id, CONCAT(a.firstname, ' ', a.lastname) AS affiliate, a.email, a.status, SUM(at.amount) AS commission, COUNT(o.order_id) AS orders, SUM(o.total) AS total FROM " . DB_PREFIX . "affiliate_transaction at LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (at.affiliate_id = a.affiliate_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (at.order_id = o.order_id)";
+		$sql = "SELECT at.affiliate_id, CONCAT(a.firstname, ' ', a.lastname) AS affiliate, a.email, a.status, SUM(at.amount) AS commission, COUNT(o.order_id) AS orders, SUM(o.total) AS total FROM " . DB_PREFIX . "affiliate_transaction at " 
+ . " LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (at.affiliate_id = a.affiliate_id) " 
+ . " LEFT JOIN `" . DB_PREFIX . "order` o ON (at.order_id = o.order_id)";
 
 		$implode = array();
 
@@ -14,10 +16,13 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sql .= " GROUP BY at.affiliate_id ORDER BY commission DESC";
+		$sql .= " " 
+ . " GROUP BY at.affiliate_id " 
+ . " ORDER BY commission DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -50,7 +55,8 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$query = $this->db->query($sql);
@@ -59,7 +65,10 @@ class ModelReportAffiliate extends Model {
 	}
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT at.product_id, CONCAT(a.firstname, ' ', a.lastname) AS affiliate, a.email, a.status, SUM(at.amount) AS commission, COUNT(o.order_id) AS orders, SUM(o.total) AS total FROM " . DB_PREFIX . "affiliate_transaction at LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (at.affiliate_id = a.affiliate_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (at.order_id = o.order_id) LEFT JOIN " . DB_PREFIX . "product";
+		$sql = "SELECT at.product_id, CONCAT(a.firstname, ' ', a.lastname) AS affiliate, a.email, a.status, SUM(at.amount) AS commission, COUNT(o.order_id) AS orders, SUM(o.total) AS total FROM " . DB_PREFIX . "affiliate_transaction at " 
+ . " LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (at.affiliate_id = a.affiliate_id) " 
+ . " LEFT JOIN `" . DB_PREFIX . "order` o ON (at.order_id = o.order_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "product";
 
 		$implode = array();
 
@@ -72,10 +81,13 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sql .= " GROUP BY at.affiliate_id ORDER BY commission DESC";
+		$sql .= " " 
+ . " GROUP BY at.affiliate_id " 
+ . " ORDER BY commission DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -108,7 +120,8 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$query = $this->db->query($sql);
@@ -117,7 +130,8 @@ class ModelReportAffiliate extends Model {
 	}
 
 	public function getAffiliateActivities($data = array()) {
-		$sql = "SELECT aa.activity_id, aa.affiliate_id, aa.key, aa.data, aa.ip, aa.date_added FROM " . DB_PREFIX . "affiliate_activity aa LEFT JOIN " . DB_PREFIX . "affiliate a ON (aa.affiliate_id = a.affiliate_id)";
+		$sql = "SELECT aa.activity_id, aa.affiliate_id, aa.key, aa.data, aa.ip, aa.date_added FROM " . DB_PREFIX . "affiliate_activity aa " 
+ . " LEFT JOIN " . DB_PREFIX . "affiliate a ON (aa.affiliate_id = a.affiliate_id)";
 
 		$implode = array();
 
@@ -138,10 +152,12 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sql .= " ORDER BY aa.date_added DESC";
+		$sql .= " " 
+ . " ORDER BY aa.date_added DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -161,7 +177,8 @@ class ModelReportAffiliate extends Model {
 	}
 
 	public function getTotalAffiliateActivities($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "affiliate_activity` aa LEFT JOIN " . DB_PREFIX . "affiliate a ON (aa.affiliate_id = a.affiliate_id)";
+		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "affiliate_activity` aa " 
+ . " LEFT JOIN " . DB_PREFIX . "affiliate a ON (aa.affiliate_id = a.affiliate_id)";
 
 		$implode = array();
 
@@ -182,7 +199,8 @@ class ModelReportAffiliate extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$query = $this->db->query($sql);

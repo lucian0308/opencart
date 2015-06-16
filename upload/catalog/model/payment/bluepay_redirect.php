@@ -5,7 +5,8 @@ class ModelPaymentBluePayRedirect extends Model {
 	public function getMethod($address, $total) {
 		$this->load->language('payment/bluepay_redirect');
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE geo_zone_id = '" . (int)$this->config->get('bluepay_redirect_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` " 
+ . " WHERE geo_zone_id = '" . (int)$this->config->get('bluepay_redirect_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		if ($this->config->get('bluepay_redirect_total') > 0 && $this->config->get('bluepay_redirect_total') > $total) {
 			$status = false;
@@ -33,7 +34,8 @@ class ModelPaymentBluePayRedirect extends Model {
 
 	public function getCards($customer_id) {
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_card` WHERE customer_id = '" . (int)$customer_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_card` " 
+ . " WHERE customer_id = '" . (int)$customer_id . "'");
 
 		$card_data = array();
 
@@ -64,13 +66,14 @@ class ModelPaymentBluePayRedirect extends Model {
 			$release_status = null;
 		}
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "bluepay_redirect_order` SET `order_id` = '" . (int)$order_info['order_id'] . "', `transaction_id` = '" . $this->db->escape($response_data['RRNO']) . "', `date_added` = now(), `date_modified` = now(), `release_status` = '" . (int)$release_status . "',  `currency_code` = '" . $this->db->escape($order_info['currency_code']) . "', `total` = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "bluepay_redirect_order` SET `order_id` = '" . (int)$order_info['order_id'] . "', `transaction_id` = '" . $this->db->escape($response_data['RRNO']) . "', `date_added` = now(), `date_modified` = now(), `release_status` = '" . (int)$release_status . "', `currency_code` = '" . $this->db->escape($order_info['currency_code']) . "', `total` = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
 
 		return $this->db->getLastId();
 	}
 
 	public function getOrder($order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		if ($qry->num_rows) {
 			$order = $qry->row;
@@ -87,7 +90,8 @@ class ModelPaymentBluePayRedirect extends Model {
 	}
 
 	private function getTransactions($bluepay_redirect_order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_order_transaction` WHERE `bluepay_redirect_order_id` = '" . (int)$bluepay_redirect_order_id . "'");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "bluepay_redirect_order_transaction` " 
+ . " WHERE `bluepay_redirect_order_id` = '" . (int)$bluepay_redirect_order_id . "'");
 
 		if ($qry->num_rows) {
 			return $qry->rows;

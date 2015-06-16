@@ -5,19 +5,23 @@ class ModelExtensionModification extends Model {
 	}
 
 	public function deleteModification($modification_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "modification WHERE modification_id = '" . (int)$modification_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "modification " 
+ . " WHERE modification_id = '" . (int)$modification_id . "'");
 	}
 
 	public function enableModification($modification_id) {
-		$this->db->query("UPDATE " . DB_PREFIX . "modification SET status = '1' WHERE modification_id = '" . (int)$modification_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "modification SET status = '1' " 
+ . " WHERE modification_id = '" . (int)$modification_id . "'");
 	}
 
 	public function disableModification($modification_id) {
-		$this->db->query("UPDATE " . DB_PREFIX . "modification SET status = '0' WHERE modification_id = '" . (int)$modification_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "modification SET status = '0' " 
+ . " WHERE modification_id = '" . (int)$modification_id . "'");
 	}
 
 	public function getModification($modification_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "modification WHERE modification_id = '" . (int)$modification_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "modification " 
+ . " WHERE modification_id = '" . (int)$modification_id . "'");
 
 		return $query->row;
 	}
@@ -34,9 +38,11 @@ class ModelExtensionModification extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
+			$sql .= " " 
+ . " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " " 
+ . " ORDER BY name";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -69,7 +75,8 @@ class ModelExtensionModification extends Model {
 	}
 	
 	public function getModificationByCode($code) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "modification WHERE code = '" . $this->db->escape($code) . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "modification " 
+ . " WHERE code = '" . $this->db->escape($code) . "'");
 
 		return $query->row;
 	}	

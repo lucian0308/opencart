@@ -181,7 +181,8 @@ class ControllerFraudFraudLabsPro extends Controller {
 			}
 
 			// Update fraud status into table
-			$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape($flp_status) . "' WHERE order_id = " . $this->db->escape($this->request->get['order_id']));
+			$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape($flp_status) . "' " 
+ . " WHERE order_id = " . $this->db->escape($this->request->get['order_id']));
 
 			//Update history record
 			if (strtolower($flp_status) == 'approve'){

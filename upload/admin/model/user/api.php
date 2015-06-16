@@ -5,15 +5,18 @@ class ModelUserApi extends Model {
 	}
 
 	public function editApi($api_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "api` SET username = '" . $this->db->escape($data['username']) . "', `password` = '" . $this->db->escape($data['password']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE api_id = '" . (int)$api_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "api` SET username = '" . $this->db->escape($data['username']) . "', `password` = '" . $this->db->escape($data['password']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 	}
 
 	public function deleteApi($api_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "api` WHERE api_id = '" . (int)$api_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "api` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 	}
 
 	public function getApi($api_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` WHERE api_id = '" . (int)$api_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		return $query->row;
 	}
@@ -29,9 +32,11 @@ class ModelUserApi extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
+			$sql .= " " 
+ . " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY username";
+			$sql .= " " 
+ . " ORDER BY username";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
