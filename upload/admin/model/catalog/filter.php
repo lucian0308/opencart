@@ -100,9 +100,11 @@ class ModelCatalogFilter extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY fgd.name";
 		}
 
@@ -162,6 +164,7 @@ class ModelCatalogFilter extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY f.sort_order ASC";
 
 		if (isset($data['start']) || isset($data['limit'])) {

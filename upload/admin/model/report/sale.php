@@ -158,9 +158,11 @@ class ModelReportSale extends Model {
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id > '0'";
 		}
 
@@ -181,24 +183,29 @@ class ModelReportSale extends Model {
 		switch($group) {
 			case 'day';
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added)";
 				break;
 			default:
 			case 'week':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), WEEK(o.date_added)";
 				break;
 			case 'month':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added)";
 				break;
 			case 'year':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added)";
 				break;
 		}
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY o.date_added DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -243,9 +250,11 @@ class ModelReportSale extends Model {
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE order_status_id > '0'";
 		}
 
@@ -290,19 +299,23 @@ class ModelReportSale extends Model {
 		switch($group) {
 			case 'day';
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added), ot.title";
 				break;
 			default:
 			case 'week':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), WEEK(o.date_added), ot.title";
 				break;
 			case 'month':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added), ot.title";
 				break;
 			case 'year':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), ot.title";
 				break;
 		}
@@ -348,7 +361,9 @@ class ModelReportSale extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " LEFT JOIN `" . DB_PREFIX . "order_total` ot ON (o.order_id = ot.order_id) " 
+ . " " 
  . " WHERE ot.code = 'tax'";
 
 		if (!empty($data['filter_order_status_id'])) {
@@ -398,19 +413,23 @@ class ModelReportSale extends Model {
 		switch($group) {
 			case 'day';
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added), ot.title";
 				break;
 			default:
 			case 'week':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), WEEK(o.date_added), ot.title";
 				break;
 			case 'month':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), MONTH(o.date_added), ot.title";
 				break;
 			case 'year':
 				$sql .= " " 
+ . " " 
  . " GROUP BY YEAR(o.date_added), ot.title";
 				break;
 		}
@@ -456,7 +475,9 @@ class ModelReportSale extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " LEFT JOIN `" . DB_PREFIX . "order_total` ot ON (o.order_id = ot.order_id) " 
+ . " " 
  . " WHERE ot.code = 'shipping'";
 
 		if (!empty($data['filter_order_status_id'])) {

@@ -19,6 +19,7 @@ class ModelReportMarketing extends Model {
 		}
 
 		$sql .= ") AS `orders`, (SELECT SUM(total) FROM `" . DB_PREFIX . "order` o2 " 
+ . " " 
  . " WHERE o2.marketing_id = m.marketing_id";
 
 		if (!empty($data['filter_order_status_id'])) {
@@ -36,7 +37,9 @@ class ModelReportMarketing extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY o2.marketing_id) AS `total` FROM `" . DB_PREFIX . "marketing` m " 
+ . " " 
  . " ORDER BY m.date_added ASC";
 
 		if (isset($data['start']) || isset($data['limit'])) {

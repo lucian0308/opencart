@@ -314,6 +314,7 @@ class ModelOpenbayAmazonus extends Model {
 			ON `apl`.`product_id` = `p`.`product_id`";
 		if ($product_id != 'all') {
 			$query .= " " 
+ . " " 
  . " WHERE `apl`.`product_id` = '" . (int)$product_id . "' AND `pd`.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";
 		} else {
 			$query .= "WHERE `pd`.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";

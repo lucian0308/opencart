@@ -85,6 +85,7 @@ class ModelCatalogProduct extends Model {
 		if (!empty($data['filter_category_id'])) {
 			if (!empty($data['filter_sub_category'])) {
 				$sql .= " FROM " . DB_PREFIX . "category_path cp " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";
 			} else {
 				$sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
@@ -92,10 +93,13 @@ class ModelCatalogProduct extends Model {
 
 			if (!empty($data['filter_filter'])) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
 			}
 		} else {
@@ -103,8 +107,11 @@ class ModelCatalogProduct extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) " 
+ . " " 
  . " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
 		if (!empty($data['filter_category_id'])) {
@@ -174,6 +181,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY p.product_id";
 
 		$sort_data = array(
@@ -189,16 +197,20 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 				$sql .= " " 
+ . " " 
  . " ORDER BY LCASE(" . $data['sort'] . ")";
 			} elseif ($data['sort'] == 'p.price') {
 				$sql .= " " 
+ . " " 
  . " ORDER BY (CASE WHEN special IS NOT NULL THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";
 			} else {
 				$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 			}
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY p.sort_order";
 		}
 
@@ -252,13 +264,16 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 				$sql .= " " 
+ . " " 
  . " ORDER BY LCASE(" . $data['sort'] . ")";
 			} else {
 				$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 			}
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY p.sort_order";
 		}
 
@@ -489,6 +504,7 @@ class ModelCatalogProduct extends Model {
 		if (!empty($data['filter_category_id'])) {
 			if (!empty($data['filter_sub_category'])) {
 				$sql .= " FROM " . DB_PREFIX . "category_path cp " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";
 			} else {
 				$sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
@@ -496,10 +512,13 @@ class ModelCatalogProduct extends Model {
 
 			if (!empty($data['filter_filter'])) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
 			}
 		} else {
@@ -507,8 +526,11 @@ class ModelCatalogProduct extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) " 
+ . " " 
  . " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
 		if (!empty($data['filter_category_id'])) {

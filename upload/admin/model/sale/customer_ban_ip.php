@@ -26,6 +26,7 @@ class ModelSaleCustomerBanIp extends Model {
  . " WHERE ci.ip = cbi.ip) AS total FROM `" . DB_PREFIX . "customer_ban_ip` cbi";
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY `ip`";
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {

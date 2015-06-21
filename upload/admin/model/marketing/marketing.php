@@ -65,6 +65,7 @@ class ModelMarketingMarketing extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -76,9 +77,11 @@ class ModelMarketingMarketing extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY name";
 		}
 
@@ -124,6 +127,7 @@ class ModelMarketingMarketing extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 

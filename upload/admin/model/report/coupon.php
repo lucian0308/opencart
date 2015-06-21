@@ -16,11 +16,14 @@ class ModelReportCoupon extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY ch.coupon_id " 
+ . " " 
  . " ORDER BY total DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -55,6 +58,7 @@ class ModelReportCoupon extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 

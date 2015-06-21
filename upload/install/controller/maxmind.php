@@ -7,6 +7,7 @@ class ControllerMaxmind extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `config_fraud_status_id` = '1', `config_fraud_score` = '" . (int)$this->request->post['config_fraud_score'] . "', `config_fraud_key` = '" . $db->escape($this->request->post['config_fraud_score']) . "', `config_fraud_detection` = '" . (int)$this->request->post['config_fraud_detection'] . "' " 
+ . " " 
  . " WHERE `store_id` = '0' AND `code` = 'config'");
 
 			$this->session->data['success'] = $this->language->get('text_maxmind_success');
@@ -52,7 +53,9 @@ class ControllerMaxmind extends Controller {
 			}
 
 			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status " 
+ . " " 
  . " WHERE language_id = '1'  " 
+ . " " 
  . " ORDER BY name ASC")->rows;
 
 			if (isset($this->request->post['config_fraud_status_id'])) {

@@ -12,9 +12,11 @@ class ModelAffiliateTransaction extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY date_added";
 		}
 

@@ -739,16 +739,20 @@ class ModelOpenbayOpenbay extends Model {
 
 		if (!empty($data['filter_category'])) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
 		if ($data['filter_market_name'] == 'ebay') {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN `" . DB_PREFIX . "ebay_listing` `ebay` ON (`p`.`product_id` = `ebay`.`product_id`)";
 
 			if ($data['filter_market_id'] == 0) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN (SELECT product_id, IF( SUM( `status` ) = 0, 0, 1 ) AS 'listing_status' FROM " . DB_PREFIX . "ebay_listing " 
+ . " " 
  . " GROUP BY product_id ) ebay2 ON (p.product_id = ebay2.product_id)";
 			}
 		}
@@ -756,9 +760,11 @@ class ModelOpenbayOpenbay extends Model {
 		if ($data['filter_market_name'] == 'amazon') {
 			if ($data['filter_market_id'] <= 4) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_product ap ON p.product_id = ap.product_id";
 			} else {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_product_link apl ON p.product_id = apl.product_id";
 			}
 
@@ -773,6 +779,7 @@ class ModelOpenbayOpenbay extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_category'])) {
@@ -854,16 +861,20 @@ class ModelOpenbayOpenbay extends Model {
 
 		if (!empty($data['filter_category'])) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
 		if ($data['filter_market_name'] == 'ebay') {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN `" . DB_PREFIX . "ebay_listing` `ebay` ON (`p`.`product_id` = `ebay`.`product_id`)";
 
 			if ($data['filter_market_id'] == 0) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN (SELECT product_id, IF( SUM( `status` ) = 0, 0, 1 ) AS 'listing_status' FROM " . DB_PREFIX . "ebay_listing " 
+ . " " 
  . " GROUP BY product_id ) ebay2 ON (p.product_id = ebay2.product_id)";
 			}
 		}
@@ -871,9 +882,11 @@ class ModelOpenbayOpenbay extends Model {
 		if ($data['filter_market_name'] == 'amazon') {
 			if ($data['filter_market_id'] <= 4) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_product ap ON p.product_id = ap.product_id";
 			} elseif ($data['filter_market_id'] <= 6) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_product_link apl ON p.product_id = apl.product_id";
 			}
 
@@ -888,9 +901,11 @@ class ModelOpenbayOpenbay extends Model {
 		if ($data['filter_market_name'] == 'amazonus') {
 			if ($data['filter_market_id'] <= 4) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazonus_product ap ON p.product_id = ap.product_id";
 			} elseif ($data['filter_market_id'] <= 6) {
 				$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazonus_product_link apl ON p.product_id = apl.product_id";
 			}
 
@@ -903,6 +918,7 @@ class ModelOpenbayOpenbay extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_category'])) {
@@ -986,6 +1002,7 @@ class ModelOpenbayOpenbay extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY p.product_id";
 
 		$sort_data = array(
@@ -999,9 +1016,11 @@ class ModelOpenbayOpenbay extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY pd.name";
 		}
 

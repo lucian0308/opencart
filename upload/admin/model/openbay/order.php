@@ -5,6 +5,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('ebay_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "ebay_order eo ON o.order_id = eo.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eo ";
@@ -12,6 +13,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazon_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_order ao ON o.order_id = ao.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) ao ";
@@ -19,6 +21,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazonus_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazonus_order auso ON o.order_id = auso.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) auso ";
@@ -26,6 +29,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('etsy_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "etsy_order eto ON o.order_id = eto.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eto ";
@@ -33,9 +37,11 @@ class ModelOpenbayOrder extends Model {
 
 		if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE `o`.`order_status_id` = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE `o`.`order_status_id` > '0'";
 		}
 
@@ -66,6 +72,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('ebay_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "ebay_order eo ON eo.order_id = o.order_id";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eo ";
@@ -73,6 +80,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazon_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_order ao ON ao.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) ao ";
@@ -80,6 +88,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazonus_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazonus_order auso ON auso.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) auso ";
@@ -87,6 +96,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('etsy_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "etsy_order eto ON eto.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eto ";
@@ -94,9 +104,11 @@ class ModelOpenbayOrder extends Model {
 
 		if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id > '0'";
 		}
 
@@ -126,9 +138,11 @@ class ModelOpenbayOrder extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY o.order_id";
 		}
 
@@ -161,6 +175,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('ebay_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "ebay_order eo ON eo.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eo ";
@@ -168,6 +183,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazon_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazon_order ao ON ao.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) ao ";
@@ -175,6 +191,7 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('openbay_amazonus_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "amazonus_order auso ON auso.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) auso ";
@@ -182,12 +199,14 @@ class ModelOpenbayOrder extends Model {
 
 		if ($this->config->get('etsy_status')) {
 			$sql .= " " 
+ . " " 
  . " LEFT JOIN " . DB_PREFIX . "etsy_order eto ON eto.order_id = o.order_id ";
 		} else {
 			$sql .= " JOIN (SELECT NULL AS order_id) eto ";
 		}
 
 		$sql .= " " 
+ . " " 
  . " WHERE `o`.`order_id` = '" . (int)$order_id . "'";
 
 		$sql = $this->db->query($sql);

@@ -110,6 +110,7 @@ class ModelSaleCustomer extends Model {
 
 		if (!empty($data['filter_ip'])) {
 			$implode[] = "c.customer_id IN (SELECT customer_id FROM " . DB_PREFIX . "customer_ip " 
+ . " " 
  . " WHERE ip = '" . $this->db->escape($data['filter_ip']) . "')";
 		}
 
@@ -141,9 +142,11 @@ class ModelSaleCustomer extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY name";
 		}
 
@@ -310,6 +313,7 @@ class ModelSaleCustomer extends Model {
 
 		if (!empty($data['filter_ip'])) {
 			$implode[] = "customer_id IN (SELECT customer_id FROM " . DB_PREFIX . "customer_ip " 
+ . " " 
  . " WHERE ip = '" . $this->db->escape($data['filter_ip']) . "')";
 		}
 
@@ -327,6 +331,7 @@ class ModelSaleCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 

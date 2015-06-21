@@ -45,6 +45,7 @@ class ModelLocalisationReturnAction extends Model {
  . " WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 			$sql .= " " 
+ . " " 
  . " ORDER BY name";
 
 			if (isset($data['order']) && ($data['order'] == 'DESC')) {

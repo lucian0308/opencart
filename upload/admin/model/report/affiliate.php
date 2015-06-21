@@ -17,11 +17,14 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY at.affiliate_id " 
+ . " " 
  . " ORDER BY commission DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -56,6 +59,7 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -82,11 +86,14 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY at.affiliate_id " 
+ . " " 
  . " ORDER BY commission DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -121,6 +128,7 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -153,10 +161,12 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY aa.date_added DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -200,6 +210,7 @@ class ModelReportAffiliate extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 

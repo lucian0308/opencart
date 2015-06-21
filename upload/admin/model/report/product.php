@@ -46,9 +46,11 @@ class ModelReportProduct extends Model {
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id > '0'";
 		}
 
@@ -61,7 +63,9 @@ class ModelReportProduct extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY op.product_id " 
+ . " " 
  . " ORDER BY total DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -87,9 +91,11 @@ class ModelReportProduct extends Model {
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id > '0'";
 		}
 

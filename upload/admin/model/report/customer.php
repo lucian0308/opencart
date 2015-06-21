@@ -124,7 +124,9 @@ class ModelReportCustomer extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY o.customer_id " 
+ . " " 
  . " ORDER BY total DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -183,7 +185,9 @@ class ModelReportCustomer extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY cr.customer_id " 
+ . " " 
  . " ORDER BY points DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -218,6 +222,7 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -241,7 +246,9 @@ class ModelReportCustomer extends Model {
 		}
 
 		$sql .= " " 
+ . " " 
  . " GROUP BY ct.customer_id " 
+ . " " 
  . " ORDER BY total DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -276,6 +283,7 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -300,10 +308,12 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY co.date_added DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -339,6 +349,7 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
@@ -371,10 +382,12 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$sql .= " " 
+ . " " 
  . " ORDER BY ca.date_added DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -418,6 +431,7 @@ class ModelReportCustomer extends Model {
 
 		if ($implode) {
 			$sql .= " " 
+ . " " 
  . " WHERE " . implode(" AND ", $implode);
 		}
 

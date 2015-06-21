@@ -417,6 +417,7 @@ class ModelCatalogProduct extends Model {
 		}
 		
 		$sql .= " " 
+ . " " 
  . " GROUP BY p.product_id";
 
 		$sort_data = array(
@@ -430,9 +431,11 @@ class ModelCatalogProduct extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY pd.name";
 		}
 
@@ -685,6 +688,7 @@ class ModelCatalogProduct extends Model {
  . " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
 
 		$sql .= " " 
+ . " " 
  . " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {

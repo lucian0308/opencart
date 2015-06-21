@@ -51,6 +51,7 @@ class ModelLocalisationTaxClass extends Model {
 			$sql = "SELECT * FROM " . DB_PREFIX . "tax_class";
 
 			$sql .= " " 
+ . " " 
  . " ORDER BY title";
 
 			if (isset($data['order']) && ($data['order'] == 'DESC')) {

@@ -19,7 +19,8 @@ class CatalogAmazonPaymentsTest extends OpenCartSeleniumTest {
 			$db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "order_amazon_product");
 			$db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "order_amazon_report");
 			$db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "order_total_tax");
-			$db->query("DELETE l, lr FROM " . DB_PREFIX . "layout l, " . DB_PREFIX . "layout_route lr WHERE l.layout_id = lr.layout_id AND l.`name` = 'Cart'");
+			$db->query("DELETE l, lr FROM " . DB_PREFIX . "layout l, " . DB_PREFIX . "layout_route lr " 
+ . " WHERE l.layout_id = lr.layout_id AND l.`name` = 'Cart'");
 
 			$this->url("admin/");
 

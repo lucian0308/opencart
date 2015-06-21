@@ -178,12 +178,14 @@ class ModelSaleOrder extends Model {
 
 			if ($implode) {
 				$sql .= " " 
+ . " " 
  . " WHERE (" . implode(" OR ", $implode) . ")";
 			} else {
 
 			}
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE o.order_status_id > '0'";
 		}
 
@@ -218,9 +220,11 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " " 
+ . " " 
  . " ORDER BY " . $data['sort'];
 		} else {
 			$sql .= " " 
+ . " " 
  . " ORDER BY o.order_id";
 		}
 
@@ -304,10 +308,12 @@ class ModelSaleOrder extends Model {
 
 			if ($implode) {
 				$sql .= " " 
+ . " " 
  . " WHERE (" . implode(" OR ", $implode) . ")";
 			}
 		} else {
 			$sql .= " " 
+ . " " 
  . " WHERE order_status_id > '0'";
 		}
 

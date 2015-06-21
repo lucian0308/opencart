@@ -51,6 +51,7 @@ class ModelOpenbayEbayProfile extends Model{
 
 		if($type !== '') {
 			$sql .= " " 
+ . " " 
  . " WHERE `type` = '" . (int)$type . "'";
 		}
 
