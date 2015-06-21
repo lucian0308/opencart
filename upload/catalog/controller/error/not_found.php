@@ -1,61 +1,64 @@
 <?php
+
 class ControllerErrorNotFound extends Controller {
-	public function index() {
-		$this->load->language('error/not_found');
 
-		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+    public function index() {
+        $this->load->language('error/not_found');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-		$data['breadcrumbs'] = array();
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
+        $data['breadcrumbs'] = array();
 
-		if (isset($this->request->get['route'])) {
-			$url_data = $this->request->get;
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home')
+        );
 
-			unset($url_data['_route_']);
+        if (isset($this->request->get['route'])) {
+            $url_data = $this->request->get;
 
-			$route = $url_data['route'];
+            unset($url_data['_route_']);
 
-			unset($url_data['route']);
+            $route = $url_data['route'];
 
-			$url = '';
+            unset($url_data['route']);
 
-			if ($url_data) {
-				$url = '&' . urldecode(http_build_query($url_data, '', '&'));
-			}
+            $url = '';
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('heading_title'),
-				'href' => $this->url->link($route, $url, $this->request->server['HTTPS'])
-			);
-		}
+            if ($url_data) {
+                $url = '&' . urldecode(http_build_query($url_data, '', '&'));
+            }
 
-		$data['heading_title'] = $this->language->get('heading_title');
+            $data['breadcrumbs'][] = array(
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link($route, $url, $this->request->server['HTTPS'])
+            );
+        }
 
-		$data['text_error'] = $this->language->get('text_error');
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['button_continue'] = $this->language->get('button_continue');
+        $data['text_error'] = $this->language->get('text_error');
 
-		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+        $data['button_continue'] = $this->language->get('button_continue');
 
-		$data['continue'] = $this->url->link('common/home');
+        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['column_right'] = $this->load->controller('common/column_right');
-		$data['content_top'] = $this->load->controller('common/content_top');
-		$data['content_bottom'] = $this->load->controller('common/content_bottom');
-		$data['footer'] = $this->load->controller('common/footer');
-		$data['header'] = $this->load->controller('common/header');
+        $data['continue'] = $this->url->link('common/home');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
-		} else {
-			$this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
-		}
-	}
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
+        }
+    }
+
 }

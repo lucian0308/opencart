@@ -1,39 +1,42 @@
 <?php
+
 class ControllerApiLogin extends Controller {
-	public function index() {
-		$this->load->language('api/login');
 
-		// Delete old login so not to cause any issues if there is an error
-		unset($this->session->data['api_id']);
+    public function index() {
+        $this->load->language('api/login');
 
-		$keys = array(
-			'username',
-			'password'
-		);
+        // Delete old login so not to cause any issues if there is an error
+        unset($this->session->data['api_id']);
 
-		foreach ($keys as $key) {
-			if (!isset($this->request->post[$key])) {
-				$this->request->post[$key] = '';
-			}
-		}
+        $keys = array(
+            'username',
+            'password'
+        );
 
-		$json = array();
+        foreach ($keys as $key) {
+            if (!isset($this->request->post[$key])) {
+                $this->request->post[$key] = '';
+            }
+        }
 
-		$this->load->model('account/api');
+        $json = array();
 
-		$api_info = $this->model_account_api->login($this->request->post['username'], $this->request->post['password']);
+        $this->load->model('account/api');
 
-		if ($api_info) {
-			$this->session->data['api_id'] = $api_info['api_id'];
+        $api_info = $this->model_account_api->login($this->request->post['username'], $this->request->post['password']);
 
-			$json['cookie'] = $this->session->getId();
+        if ($api_info) {
+            $this->session->data['api_id'] = $api_info['api_id'];
 
-			$json['success'] = $this->language->get('text_success');
-		} else {
-			$json['error'] = $this->language->get('error_login');
-		}
+            $json['cookie'] = $this->session->getId();
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
+            $json['success'] = $this->language->get('text_success');
+        } else {
+            $json['error'] = $this->language->get('error_login');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

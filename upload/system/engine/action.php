@@ -1,73 +1,76 @@
 <?php
+
 final class Action {
-	private $file;
-	private $class;
-	private $method;
-	private $args = array();
 
-	public function __construct($route, $args = array()) {
-		$path = '';
+    private $file;
+    private $class;
+    private $method;
+    private $args = array();
 
-		// Break apart the route
-		$parts = explode('/', str_replace('../', '', (string)$route));
+    public function __construct($route, $args = array()) {
+        $path = '';
 
-		foreach ($parts as $part) {
-			$path .= $part;
+        // Break apart the route
+        $parts = explode('/', str_replace('../', '', (string) $route));
 
-			if (is_dir(DIR_APPLICATION . 'controller/' . $path)) {
-				$path .= '/';
+        foreach ($parts as $part) {
+            $path .= $part;
 
-				array_shift($parts);
+            if (is_dir(DIR_APPLICATION . 'controller/' . $path)) {
+                $path .= '/';
 
-				continue;
-			}
+                array_shift($parts);
 
-			$file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', $path) . '.php';
+                continue;
+            }
 
-			if (is_file($file)) {
-				$this->file = $file;
+            $file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', $path) . '.php';
 
-				$this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
+            if (is_file($file)) {
+                $this->file = $file;
 
-				array_shift($parts);
+                $this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
 
-				break;
-			}
-		}
+                array_shift($parts);
 
-		if ($args) {
-			$this->args = $args;
-		}
+                break;
+            }
+        }
 
-		$method = array_shift($parts);
+        if ($args) {
+            $this->args = $args;
+        }
 
-		if ($method) {
-			$this->method = $method;
-		} else {
-			$this->method = 'index';
-		}
-	}
+        $method = array_shift($parts);
 
-	public function execute($registry) {
-		// Stop any magical methods being called
-		if (substr($this->method, 0, 2) == '__') {
-			return false;
-		}
+        if ($method) {
+            $this->method = $method;
+        } else {
+            $this->method = 'index';
+        }
+    }
 
-		if (is_file($this->file)) {
-			include_once($this->file);
+    public function execute($registry) {
+        // Stop any magical methods being called
+        if (substr($this->method, 0, 2) == '__') {
+            return false;
+        }
 
-			$class = $this->class;
+        if (is_file($this->file)) {
+            include_once($this->file);
 
-			$controller = new $class($registry);
+            $class = $this->class;
 
-			if (is_callable(array($controller, $this->method))) {
-				return call_user_func(array($controller, $this->method), $this->args);
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+            $controller = new $class($registry);
+
+            if (is_callable(array($controller, $this->method))) {
+                return call_user_func(array($controller, $this->method), $this->args);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }

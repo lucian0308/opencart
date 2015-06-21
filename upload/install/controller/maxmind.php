@@ -1,99 +1,102 @@
 <?php
+
 class ControllerMaxmind extends Controller {
-	private $error = array();
 
-	public function index() {
-		$db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+    private $error = array();
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `config_fraud_status_id` = '1', `config_fraud_score` = '" . (int)$this->request->post['config_fraud_score'] . "', `config_fraud_key` = '" . $db->escape($this->request->post['config_fraud_score']) . "', `config_fraud_detection` = '" . (int)$this->request->post['config_fraud_detection'] . "' " 
- . " " 
- . " WHERE `store_id` = '0' AND `code` = 'config'");
+    public function index() {
+        $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
-			$this->session->data['success'] = $this->language->get('text_maxmind_success');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `config_fraud_status_id` = '1', `config_fraud_score` = '" . (int) $this->request->post['config_fraud_score'] . "', `config_fraud_key` = '" . $db->escape($this->request->post['config_fraud_score']) . "', `config_fraud_detection` = '" . (int) $this->request->post['config_fraud_detection'] . "' "
+                    . " "
+                    . " WHERE `store_id` = '0' AND `code` = 'config'");
 
-			$this->response->redirect($this->url->link('step_4'));
-		} else {
-			$this->document->setTitle($this->language->get('heading_maxmind'));
+            $this->session->data['success'] = $this->language->get('text_maxmind_success');
 
-			$data['heading_maxmind'] = $this->language->get('heading_maxmind');
-			$data['heading_maxmind_small'] = $this->language->get('heading_maxmind_small');
+            $this->response->redirect($this->url->link('step_4'));
+        } else {
+            $this->document->setTitle($this->language->get('heading_maxmind'));
 
-			$data['text_maxmind_top'] = $this->language->get('text_maxmind_top');
-			$data['text_maxmind_link'] = $this->language->get('text_maxmind_link');
+            $data['heading_maxmind'] = $this->language->get('heading_maxmind');
+            $data['heading_maxmind_small'] = $this->language->get('heading_maxmind_small');
 
-			$data['entry_licence_key'] = $this->language->get('entry_licence_key');
-			$data['entry_risk'] = $this->language->get('entry_risk');
-			$data['entry_fraud_status'] = $this->language->get('entry_fraud_status');
+            $data['text_maxmind_top'] = $this->language->get('text_maxmind_top');
+            $data['text_maxmind_link'] = $this->language->get('text_maxmind_link');
 
-			$data['help_maxmind_risk'] = $this->language->get('help_maxmind_risk');
-			$data['help_maxmind_fraud'] = $this->language->get('help_maxmind_fraud');
+            $data['entry_licence_key'] = $this->language->get('entry_licence_key');
+            $data['entry_risk'] = $this->language->get('entry_risk');
+            $data['entry_fraud_status'] = $this->language->get('entry_fraud_status');
 
-			$data['button_continue'] = $this->language->get('button_continue');
-			$data['button_back'] = $this->language->get('button_back');
+            $data['help_maxmind_risk'] = $this->language->get('help_maxmind_risk');
+            $data['help_maxmind_fraud'] = $this->language->get('help_maxmind_fraud');
 
-			$data['action'] = $this->url->link('maxmind');
+            $data['button_continue'] = $this->language->get('button_continue');
+            $data['button_back'] = $this->language->get('button_back');
 
-			if (isset($this->request->post['config_fraud_detection'])) {
-				$data['config_fraud_detection'] = $this->request->post['config_fraud_detection'];
-			} else {
-				$data['config_fraud_detection'] = '';
-			}
+            $data['action'] = $this->url->link('maxmind');
 
-			if (isset($this->request->post['config_fraud_key'])) {
-				$data['config_fraud_key'] = $this->request->post['config_fraud_key'];
-			} else {
-				$data['config_fraud_key'] = '';
-			}
+            if (isset($this->request->post['config_fraud_detection'])) {
+                $data['config_fraud_detection'] = $this->request->post['config_fraud_detection'];
+            } else {
+                $data['config_fraud_detection'] = '';
+            }
 
-			if (isset($this->request->post['config_fraud_score'])) {
-				$data['config_fraud_score'] = $this->request->post['config_fraud_score'];
-			} else {
-				$data['config_fraud_score'] = '80';
-			}
+            if (isset($this->request->post['config_fraud_key'])) {
+                $data['config_fraud_key'] = $this->request->post['config_fraud_key'];
+            } else {
+                $data['config_fraud_key'] = '';
+            }
 
-			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status " 
- . " " 
- . " WHERE language_id = '1'  " 
- . " " 
- . " ORDER BY name ASC")->rows;
+            if (isset($this->request->post['config_fraud_score'])) {
+                $data['config_fraud_score'] = $this->request->post['config_fraud_score'];
+            } else {
+                $data['config_fraud_score'] = '80';
+            }
 
-			if (isset($this->request->post['config_fraud_status_id'])) {
-				$data['config_fraud_status_id'] = $this->request->post['config_fraud_status_id'];
-			} else {
-				$data['config_fraud_status_id'] = '';
-			}
+            $data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status "
+                            . " "
+                            . " WHERE language_id = '1'  "
+                            . " "
+                            . " ORDER BY name ASC")->rows;
 
-			if (isset($this->error['fraud_key'])) {
-				$data['error_fraud_key'] = $this->error['fraud_key'];
-			} else {
-				$data['error_fraud_key'] = '';
-			}
+            if (isset($this->request->post['config_fraud_status_id'])) {
+                $data['config_fraud_status_id'] = $this->request->post['config_fraud_status_id'];
+            } else {
+                $data['config_fraud_status_id'] = '';
+            }
 
-			if (isset($this->error['fraud_score'])) {
-				$data['error_fraud_score'] = $this->error['fraud_score'];
-			} else {
-				$data['error_fraud_score'] = '';
-			}
+            if (isset($this->error['fraud_key'])) {
+                $data['error_fraud_key'] = $this->error['fraud_key'];
+            } else {
+                $data['error_fraud_key'] = '';
+            }
 
-			$data['back'] = $this->url->link('step_4');
+            if (isset($this->error['fraud_score'])) {
+                $data['error_fraud_score'] = $this->error['fraud_score'];
+            } else {
+                $data['error_fraud_score'] = '';
+            }
 
-			$data['footer'] = $this->load->controller('footer');
-			$data['header'] = $this->load->controller('header');
+            $data['back'] = $this->url->link('step_4');
 
-			$this->response->setOutput($this->load->view('maxmind.tpl', $data));
-		}
-	}
+            $data['footer'] = $this->load->controller('footer');
+            $data['header'] = $this->load->controller('header');
 
-	private function validate() {
-		if (!$this->request->post['config_fraud_key']) {
-			$this->error['fraud_key'] = $this->language->get('error_key');
-		}
+            $this->response->setOutput($this->load->view('maxmind.tpl', $data));
+        }
+    }
 
-		if (!$this->request->post['config_fraud_score'] || (int)$this->request->post['config_fraud_score'] > 100 || (int)$this->request->post['config_fraud_score'] < 0) {
-			$this->error['fraud_score'] = $this->language->get('error_score');
-		}
+    private function validate() {
+        if (!$this->request->post['config_fraud_key']) {
+            $this->error['fraud_key'] = $this->language->get('error_key');
+        }
 
-		return !$this->error;
-	}
+        if (!$this->request->post['config_fraud_score'] || (int) $this->request->post['config_fraud_score'] > 100 || (int) $this->request->post['config_fraud_score'] < 0) {
+            $this->error['fraud_score'] = $this->language->get('error_score');
+        }
+
+        return !$this->error;
+    }
+
 }

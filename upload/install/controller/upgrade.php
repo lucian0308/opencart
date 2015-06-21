@@ -1,54 +1,57 @@
 <?php
+
 class ControllerUpgrade extends Controller {
-	private $error = array();
 
-	public function index() {
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->load->model('upgrade');
+    private $error = array();
 
-			$this->model_upgrade->mysql();
+    public function index() {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $this->load->model('upgrade');
 
-			$this->response->redirect($this->url->link('upgrade/success'));
-		}
+            $this->model_upgrade->mysql();
 
-		$data = array();
+            $this->response->redirect($this->url->link('upgrade/success'));
+        }
 
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
+        $data = array();
 
-		$data['action'] = $this->url->link('upgrade');
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
 
-		$data['header'] = $this->load->controller('header');
-		$data['footer'] = $this->load->controller('footer');
+        $data['action'] = $this->url->link('upgrade');
 
-		$this->response->setOutput($this->load->view('upgrade.tpl', $data));
-	}
+        $data['header'] = $this->load->controller('header');
+        $data['footer'] = $this->load->controller('footer');
 
-	public function success() {
-		$data = array();
+        $this->response->setOutput($this->load->view('upgrade.tpl', $data));
+    }
 
-		$data['header'] = $this->load->controller('header');
-		$data['footer'] = $this->load->controller('footer');
+    public function success() {
+        $data = array();
 
-		$this->response->setOutput($this->load->view('success.tpl', $data));
-	}
+        $data['header'] = $this->load->controller('header');
+        $data['footer'] = $this->load->controller('footer');
 
-	private function validate() {
-		if (DB_DRIVER == 'mysql') {
-			if (!$connection = @mysql_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD)) {
-				$this->error['warning'] = 'Error: Could not connect to the database please make sure the database server, username and password is correct in the config.php file!';
-			} else {
-				if (!mysql_select_db(DB_DATABASE, $connection)) {
-					$this->error['warning'] = 'Error: Database "' . DB_DATABASE . '" does not exist!';
-				}
+        $this->response->setOutput($this->load->view('success.tpl', $data));
+    }
 
-				mysql_close($connection);
-			}
-		}
+    private function validate() {
+        if (DB_DRIVER == 'mysql') {
+            if (!$connection = @mysql_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD)) {
+                $this->error['warning'] = 'Error: Could not connect to the database please make sure the database server, username and password is correct in the config.php file!';
+            } else {
+                if (!mysql_select_db(DB_DATABASE, $connection)) {
+                    $this->error['warning'] = 'Error: Database "' . DB_DATABASE . '" does not exist!';
+                }
 
-		return !$this->error;
-	}
+                mysql_close($connection);
+            }
+        }
+
+        return !$this->error;
+    }
+
 }

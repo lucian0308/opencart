@@ -1,50 +1,53 @@
 <?php
+
 class ControllerModuleStore extends Controller {
-	public function index() {
-		$status = true;
 
-		if ($this->config->get('store_admin')) {
-			$this->load->library('user');
+    public function index() {
+        $status = true;
 
-			$this->user = new User($this->registry);
+        if ($this->config->get('store_admin')) {
+            $this->load->library('user');
 
-			$status = $this->user->isLogged();
-		}
+            $this->user = new User($this->registry);
 
-		if ($status) {
-			$this->load->language('module/store');
+            $status = $this->user->isLogged();
+        }
 
-			$data['heading_title'] = $this->language->get('heading_title');
+        if ($status) {
+            $this->load->language('module/store');
 
-			$data['text_store'] = $this->language->get('text_store');
+            $data['heading_title'] = $this->language->get('heading_title');
 
-			$data['store_id'] = $this->config->get('config_store_id');
+            $data['text_store'] = $this->language->get('text_store');
 
-			$data['stores'] = array();
+            $data['store_id'] = $this->config->get('config_store_id');
 
-			$data['stores'][] = array(
-				'store_id' => 0,
-				'name'     => $this->language->get('text_default'),
-				'url'      => HTTP_SERVER . 'index.php?route=common/home&session_id=' . $this->session->getId()
-			);
+            $data['stores'] = array();
 
-			$this->load->model('setting/store');
+            $data['stores'][] = array(
+                'store_id' => 0,
+                'name' => $this->language->get('text_default'),
+                'url' => HTTP_SERVER . 'index.php?route=common/home&session_id=' . $this->session->getId()
+            );
 
-			$results = $this->model_setting_store->getStores();
+            $this->load->model('setting/store');
 
-			foreach ($results as $result) {
-				$data['stores'][] = array(
-					'store_id' => $result['store_id'],
-					'name'     => $result['name'],
-					'url'      => $result['url'] . 'index.php?route=common/home&session_id=' . $this->session->getId()
-				);
-			}
+            $results = $this->model_setting_store->getStores();
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/store.tpl')) {
-				return $this->load->view($this->config->get('config_template') . '/template/module/store.tpl', $data);
-			} else {
-				return $this->load->view('default/template/module/store.tpl', $data);
-			}
-		}
-	}
+            foreach ($results as $result) {
+                $data['stores'][] = array(
+                    'store_id' => $result['store_id'],
+                    'name' => $result['name'],
+                    'url' => $result['url'] . 'index.php?route=common/home&session_id=' . $this->session->getId()
+                );
+            }
+
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/store.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/module/store.tpl', $data);
+            } else {
+                return $this->load->view('default/template/module/store.tpl', $data);
+            }
+        }
+    }
+
 }

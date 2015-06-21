@@ -1,33 +1,36 @@
 <?php
+
 class ControllerDashboardMap extends Controller {
-	public function index() {
-		$this->load->language('dashboard/map');
 
-		$data['heading_title'] = $this->language->get('heading_title');
+    public function index() {
+        $this->load->language('dashboard/map');
 
-		$data['text_order'] = $this->language->get('text_order');
-		$data['text_sale'] = $this->language->get('text_sale');
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['token'] = $this->session->data['token'];
+        $data['text_order'] = $this->language->get('text_order');
+        $data['text_sale'] = $this->language->get('text_sale');
 
-		return $this->load->view('dashboard/map.tpl', $data);
-	}
+        $data['token'] = $this->session->data['token'];
 
-	public function map() {
-		$json = array();
+        return $this->load->view('dashboard/map.tpl', $data);
+    }
 
-		$this->load->model('report/sale');
+    public function map() {
+        $json = array();
 
-		$results = $this->model_report_sale->getTotalOrdersByCountry();
+        $this->load->model('report/sale');
 
-		foreach ($results as $result) {
-			$json[strtolower($result['iso_code_2'])] = array(
-				'total'  => $result['total'],
-				'amount' => $this->currency->format($result['amount'], $this->config->get('currency_code'))
-			);
-		}
+        $results = $this->model_report_sale->getTotalOrdersByCountry();
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
+        foreach ($results as $result) {
+            $json[strtolower($result['iso_code_2'])] = array(
+                'total' => $result['total'],
+                'amount' => $this->currency->format($result['amount'], $this->config->get('currency_code'))
+            );
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

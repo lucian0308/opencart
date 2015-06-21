@@ -1,26 +1,29 @@
 <?php
+
 class ControllerPaymentCod extends Controller {
-	public function index() {
-		$data['text_loading'] = $this->language->get('text_loading');
 
-		$data['button_confirm'] = $this->language->get('button_confirm');
+    public function index() {
+        $data['text_loading'] = $this->language->get('text_loading');
 
-		$data['text_loading'] = $this->language->get('text_loading');
+        $data['button_confirm'] = $this->language->get('button_confirm');
 
-		$data['continue'] = $this->url->link('checkout/success');
+        $data['text_loading'] = $this->language->get('text_loading');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/cod.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/payment/cod.tpl', $data);
-		} else {
-			return $this->load->view('default/template/payment/cod.tpl', $data);
-		}
-	}
+        $data['continue'] = $this->url->link('checkout/success');
 
-	public function confirm() {
-		if ($this->session->data['payment_method']['code'] == 'cod') {
-			$this->load->model('checkout/order');
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/cod.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/payment/cod.tpl', $data);
+        } else {
+            return $this->load->view('default/template/payment/cod.tpl', $data);
+        }
+    }
 
-			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('cod_order_status_id'));
-		}
-	}
+    public function confirm() {
+        if ($this->session->data['payment_method']['code'] == 'cod') {
+            $this->load->model('checkout/order');
+
+            $this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('cod_order_status_id'));
+        }
+    }
+
 }

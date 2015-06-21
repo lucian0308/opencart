@@ -1,367 +1,370 @@
 <?php
+
 class ControllerLocalisationStockStatus extends Controller {
-	private $error = array();
 
-	public function index() {
-		$this->load->language('localisation/stock_status');
+    private $error = array();
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function index() {
+        $this->load->language('localisation/stock_status');
 
-		$this->load->model('localisation/stock_status');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		$this->getList();
-	}
+        $this->load->model('localisation/stock_status');
 
-	public function add() {
-		$this->load->language('localisation/stock_status');
+        $this->getList();
+    }
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function add() {
+        $this->load->language('localisation/stock_status');
 
-		$this->load->model('localisation/stock_status');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_localisation_stock_status->addStockStatus($this->request->post);
+        $this->load->model('localisation/stock_status');
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->model_localisation_stock_status->addStockStatus($this->request->post);
 
-			$url = '';
+            $this->session->data['success'] = $this->language->get('text_success');
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+            $url = '';
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
 
-			$this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		}
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
 
-		$this->getForm();
-	}
+            $this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
 
-	public function edit() {
-		$this->load->language('localisation/stock_status');
+        $this->getForm();
+    }
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function edit() {
+        $this->load->language('localisation/stock_status');
 
-		$this->load->model('localisation/stock_status');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_localisation_stock_status->editStockStatus($this->request->get['stock_status_id'], $this->request->post);
+        $this->load->model('localisation/stock_status');
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->model_localisation_stock_status->editStockStatus($this->request->get['stock_status_id'], $this->request->post);
 
-			$url = '';
+            $this->session->data['success'] = $this->language->get('text_success');
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+            $url = '';
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
 
-			$this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		}
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
 
-		$this->getForm();
-	}
+            $this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
 
-	public function delete() {
-		$this->load->language('localisation/stock_status');
+        $this->getForm();
+    }
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function delete() {
+        $this->load->language('localisation/stock_status');
 
-		$this->load->model('localisation/stock_status');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $stock_status_id) {
-				$this->model_localisation_stock_status->deleteStockStatus($stock_status_id);
-			}
+        $this->load->model('localisation/stock_status');
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+            foreach ($this->request->post['selected'] as $stock_status_id) {
+                $this->model_localisation_stock_status->deleteStockStatus($stock_status_id);
+            }
 
-			$url = '';
+            $this->session->data['success'] = $this->language->get('text_success');
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+            $url = '';
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		}
-
-		$this->getList();
-	}
-
-	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$data['breadcrumbs'] = array();
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-		);
+            $this->response->redirect($this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
-		);
+        $this->getList();
+    }
+
+    protected function getList() {
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
 
-		$data['add'] = $this->url->link('localisation/stock_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$data['delete'] = $this->url->link('localisation/stock_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $url = '';
 
-		$data['stock_statuses'] = array();
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
 
-		$filter_data = array(
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit' => $this->config->get('config_limit_admin')
-		);
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
 
-		$stock_status_total = $this->model_localisation_stock_status->getTotalStockStatuses();
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
 
-		$results = $this->model_localisation_stock_status->getStockStatuses($filter_data);
+        $data['breadcrumbs'] = array();
 
-		foreach ($results as $result) {
-			$data['stock_statuses'][] = array(
-				'stock_status_id' => $result['stock_status_id'],
-				'name'            => $result['name'],
-				'edit'            => $this->url->link('localisation/stock_status/edit', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $result['stock_status_id'] . $url, 'SSL')
-			);
-		}
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+        );
 
-		$data['heading_title'] = $this->language->get('heading_title');
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
+        );
 
-		$data['text_list'] = $this->language->get('text_list');
-		$data['text_no_results'] = $this->language->get('text_no_results');
-		$data['text_confirm'] = $this->language->get('text_confirm');
+        $data['add'] = $this->url->link('localisation/stock_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('localisation/stock_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		$data['column_name'] = $this->language->get('column_name');
-		$data['column_action'] = $this->language->get('column_action');
+        $data['stock_statuses'] = array();
 
-		$data['button_add'] = $this->language->get('button_add');
-		$data['button_edit'] = $this->language->get('button_edit');
-		$data['button_delete'] = $this->language->get('button_delete');
+        $filter_data = array(
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin')
+        );
 
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
+        $stock_status_total = $this->model_localisation_stock_status->getTotalStockStatuses();
 
-		if (isset($this->session->data['success'])) {
-			$data['success'] = $this->session->data['success'];
+        $results = $this->model_localisation_stock_status->getStockStatuses($filter_data);
 
-			unset($this->session->data['success']);
-		} else {
-			$data['success'] = '';
-		}
+        foreach ($results as $result) {
+            $data['stock_statuses'][] = array(
+                'stock_status_id' => $result['stock_status_id'],
+                'name' => $result['name'],
+                'edit' => $this->url->link('localisation/stock_status/edit', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $result['stock_status_id'] . $url, 'SSL')
+            );
+        }
 
-		if (isset($this->request->post['selected'])) {
-			$data['selected'] = (array)$this->request->post['selected'];
-		} else {
-			$data['selected'] = array();
-		}
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$url = '';
+        $data['text_list'] = $this->language->get('text_list');
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_confirm'] = $this->language->get('text_confirm');
 
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
+        $data['column_name'] = $this->language->get('column_name');
+        $data['column_action'] = $this->language->get('column_action');
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+        $data['button_add'] = $this->language->get('button_add');
+        $data['button_edit'] = $this->language->get('button_edit');
+        $data['button_delete'] = $this->language->get('button_delete');
 
-		$data['sort_name'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
 
-		$url = '';
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+        if (isset($this->request->post['selected'])) {
+            $data['selected'] = (array) $this->request->post['selected'];
+        } else {
+            $data['selected'] = array();
+        }
 
-		$pagination = new Pagination();
-		$pagination->total = $stock_status_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_limit_admin');
-		$pagination->url = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $url = '';
 
-		$data['pagination'] = $pagination->render();
+        if ($order == 'ASC') {
+            $url .= '&order=DESC';
+        } else {
+            $url .= '&order=ASC';
+        }
 
-		$data['results'] = sprintf($this->language->get('text_pagination'), ($stock_status_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($stock_status_total - $this->config->get('config_limit_admin'))) ? $stock_status_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $stock_status_total, ceil($stock_status_total / $this->config->get('config_limit_admin')));
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
 
-		$data['sort'] = $sort;
-		$data['order'] = $order;
+        $data['sort_name'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
 
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        $url = '';
 
-		$this->response->setOutput($this->load->view('localisation/stock_status_list.tpl', $data));
-	}
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
 
-	protected function getForm() {
-		$data['heading_title'] = $this->language->get('heading_title');
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
 
-		$data['text_form'] = !isset($this->request->get['stock_status_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $pagination = new Pagination();
+        $pagination->total = $stock_status_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->url = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
-		$data['entry_name'] = $this->language->get('entry_name');
-		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['pagination'] = $pagination->render();
 
-		$data['button_save'] = $this->language->get('button_save');
-		$data['button_cancel'] = $this->language->get('button_cancel');
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($stock_status_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($stock_status_total - $this->config->get('config_limit_admin'))) ? $stock_status_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $stock_status_total, ceil($stock_status_total / $this->config->get('config_limit_admin')));
 
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
+        $data['sort'] = $sort;
+        $data['order'] = $order;
 
-		if (isset($this->error['name'])) {
-			$data['error_name'] = $this->error['name'];
-		} else {
-			$data['error_name'] = array();
-		}
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-		$url = '';
+        $this->response->setOutput($this->load->view('localisation/stock_status_list.tpl', $data));
+    }
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+    protected function getForm() {
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+        $data['text_form'] = !isset($this->request->get['stock_status_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
-		$data['breadcrumbs'] = array();
+        $data['button_save'] = $this->language->get('button_save');
+        $data['button_cancel'] = $this->language->get('button_cancel');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-		);
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
-		);
+        if (isset($this->error['name'])) {
+            $data['error_name'] = $this->error['name'];
+        } else {
+            $data['error_name'] = array();
+        }
 
-		if (!isset($this->request->get['stock_status_id'])) {
-			$data['action'] = $this->url->link('localisation/stock_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		} else {
-			$data['action'] = $this->url->link('localisation/stock_status/edit', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $this->request->get['stock_status_id'] . $url, 'SSL');
-		}
+        $url = '';
 
-		$data['cancel'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
 
-		$this->load->model('localisation/language');
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
 
-		$data['languages'] = $this->model_localisation_language->getLanguages();
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
 
-		if (isset($this->request->post['stock_status'])) {
-			$data['stock_status'] = $this->request->post['stock_status'];
-		} elseif (isset($this->request->get['stock_status_id'])) {
-			$data['stock_status'] = $this->model_localisation_stock_status->getStockStatusDescriptions($this->request->get['stock_status_id']);
-		} else {
-			$data['stock_status'] = array();
-		}
+        $data['breadcrumbs'] = array();
 
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+        );
 
-		$this->response->setOutput($this->load->view('localisation/stock_status_form.tpl', $data));
-	}
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
+        );
 
-	protected function validateForm() {
-		if (!$this->user->hasPermission('modify', 'localisation/stock_status')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        if (!isset($this->request->get['stock_status_id'])) {
+            $data['action'] = $this->url->link('localisation/stock_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        } else {
+            $data['action'] = $this->url->link('localisation/stock_status/edit', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $this->request->get['stock_status_id'] . $url, 'SSL');
+        }
 
-		foreach ($this->request->post['stock_status'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
-				$this->error['name'][$language_id] = $this->language->get('error_name');
-			}
-		}
+        $data['cancel'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		return !$this->error;
-	}
+        $this->load->model('localisation/language');
 
-	protected function validateDelete() {
-		if (!$this->user->hasPermission('modify', 'localisation/stock_status')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        $data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->load->model('setting/store');
-		$this->load->model('catalog/product');
+        if (isset($this->request->post['stock_status'])) {
+            $data['stock_status'] = $this->request->post['stock_status'];
+        } elseif (isset($this->request->get['stock_status_id'])) {
+            $data['stock_status'] = $this->model_localisation_stock_status->getStockStatusDescriptions($this->request->get['stock_status_id']);
+        } else {
+            $data['stock_status'] = array();
+        }
 
-		foreach ($this->request->post['selected'] as $stock_status_id) {
-			$product_total = $this->model_catalog_product->getTotalProductsByStockStatusId($stock_status_id);
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-			if ($product_total) {
-				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
-			}
-		}
+        $this->response->setOutput($this->load->view('localisation/stock_status_form.tpl', $data));
+    }
 
-		return !$this->error;
-	}
+    protected function validateForm() {
+        if (!$this->user->hasPermission('modify', 'localisation/stock_status')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        foreach ($this->request->post['stock_status'] as $language_id => $value) {
+            if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
+                $this->error['name'][$language_id] = $this->language->get('error_name');
+            }
+        }
+
+        return !$this->error;
+    }
+
+    protected function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'localisation/stock_status')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        $this->load->model('setting/store');
+        $this->load->model('catalog/product');
+
+        foreach ($this->request->post['selected'] as $stock_status_id) {
+            $product_total = $this->model_catalog_product->getTotalProductsByStockStatusId($stock_status_id);
+
+            if ($product_total) {
+                $this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
+            }
+        }
+
+        return !$this->error;
+    }
+
 }

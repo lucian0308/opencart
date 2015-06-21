@@ -1,4 +1,5 @@
 <?php
+
 // Heading
 $_['heading_title'] = 'Login with Amazon';
 

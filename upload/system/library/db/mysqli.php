@@ -1,60 +1,64 @@
 <?php
+
 namespace DB;
+
 final class MySQLi {
-	private $link;
 
-	public function __construct($hostname, $username, $password, $database, $port = '3306') {
-		$this->link = new \mysqli($hostname, $username, $password, $database, $port);
+    private $link;
 
-		if ($this->link->connect_error) {
-			trigger_error('Error: Could not make a database link (' . $this->link->connect_errno . ') ' . $this->link->connect_error);
-			exit();
-		}
+    public function __construct($hostname, $username, $password, $database, $port = '3306') {
+        $this->link = new \mysqli($hostname, $username, $password, $database, $port);
 
-		$this->link->set_charset("utf8");
-		$this->link->query("SET SQL_MODE = ''");
-	}
+        if ($this->link->connect_error) {
+            trigger_error('Error: Could not make a database link (' . $this->link->connect_errno . ') ' . $this->link->connect_error);
+            exit();
+        }
 
-	public function query($sql) {
-		$query = $this->link->query($sql);
+        $this->link->set_charset("utf8");
+        $this->link->query("SET SQL_MODE = ''");
+    }
 
-		if (!$this->link->errno) {
-			if ($query instanceof \mysqli_result) {
-				$data = array();
+    public function query($sql) {
+        $query = $this->link->query($sql);
 
-				while ($row = $query->fetch_assoc()) {
-					$data[] = $row;
-				}
+        if (!$this->link->errno) {
+            if ($query instanceof \mysqli_result) {
+                $data = array();
 
-				$result = new \stdClass();
-				$result->num_rows = $query->num_rows;
-				$result->row = isset($data[0]) ? $data[0] : array();
-				$result->rows = $data;
+                while ($row = $query->fetch_assoc()) {
+                    $data[] = $row;
+                }
 
-				$query->close();
+                $result = new \stdClass();
+                $result->num_rows = $query->num_rows;
+                $result->row = isset($data[0]) ? $data[0] : array();
+                $result->rows = $data;
 
-				return $result;
-			} else {
-				return true;
-			}
-		} else {
-			trigger_error('Error: ' . $this->link->error  . '<br />Error No: ' . $this->link->errno . '<br />' . $sql);
-		}
-	}
+                $query->close();
 
-	public function escape($value) {
-		return $this->link->real_escape_string($value);
-	}
+                return $result;
+            } else {
+                return true;
+            }
+        } else {
+            trigger_error('Error: ' . $this->link->error . '<br />Error No: ' . $this->link->errno . '<br />' . $sql);
+        }
+    }
 
-	public function countAffected() {
-		return $this->link->affected_rows;
-	}
+    public function escape($value) {
+        return $this->link->real_escape_string($value);
+    }
 
-	public function getLastId() {
-		return $this->link->insert_id;
-	}
+    public function countAffected() {
+        return $this->link->affected_rows;
+    }
 
-	public function __destruct() {
-		$this->link->close();
-	}
+    public function getLastId() {
+        return $this->link->insert_id;
+    }
+
+    public function __destruct() {
+        $this->link->close();
+    }
+
 }

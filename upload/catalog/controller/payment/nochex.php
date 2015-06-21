@@ -1,131 +1,134 @@
 <?php
+
 // Nochex via form will work for both simple "Seller" account and "Merchant" account holders
 // Nochex via APC maybe only avaiable to "Merchant" account holders only - site docs a bit vague on this point
 class ControllerPaymentNochex extends Controller {
-	public function index() {
-		$this->load->language('payment/nochex');
 
-		$data['button_confirm'] = $this->language->get('button_confirm');
+    public function index() {
+        $this->load->language('payment/nochex');
 
-		$this->load->model('checkout/order');
+        $data['button_confirm'] = $this->language->get('button_confirm');
 
-		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $this->load->model('checkout/order');
 
-		$data['action'] = 'https://secure.nochex.com/';
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-		// Nochex minimum requirements
-		// The merchant ID is usually your Nochex registered email address but can be altered for "Merchant" accounts see below
-		if ($this->config->get('nochex_email') != $this->config->get('nochex_merchant')) {
-			// This MUST be changed on your Nochex account!!!!
-			$data['merchant_id'] = $this->config->get('nochex_merchant');
-		} else {
-			$data['merchant_id'] = $this->config->get('nochex_email');
-		}
+        $data['action'] = 'https://secure.nochex.com/';
 
-		$data['amount'] = $this->currency->format($order_info['total'], 'GBP', false, false);
-		$data['order_id'] = $this->session->data['order_id'];
-		$data['description'] = $this->config->get('config_name');
+        // Nochex minimum requirements
+        // The merchant ID is usually your Nochex registered email address but can be altered for "Merchant" accounts see below
+        if ($this->config->get('nochex_email') != $this->config->get('nochex_merchant')) {
+            // This MUST be changed on your Nochex account!!!!
+            $data['merchant_id'] = $this->config->get('nochex_merchant');
+        } else {
+            $data['merchant_id'] = $this->config->get('nochex_email');
+        }
 
-		$data['billing_fullname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
+        $data['amount'] = $this->currency->format($order_info['total'], 'GBP', false, false);
+        $data['order_id'] = $this->session->data['order_id'];
+        $data['description'] = $this->config->get('config_name');
 
-		if ($order_info['payment_address_2']) {
-			$data['billing_address']  = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_address_2'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
-		} else {
-			$data['billing_address']  = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
-		}
+        $data['billing_fullname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
 
-		$data['billing_postcode'] = $order_info['payment_postcode'];
+        if ($order_info['payment_address_2']) {
+            $data['billing_address'] = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_address_2'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
+        } else {
+            $data['billing_address'] = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
+        }
 
-		if ($this->cart->hasShipping()) {
-			$data['delivery_fullname'] = $order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname'];
+        $data['billing_postcode'] = $order_info['payment_postcode'];
 
-			if ($order_info['shipping_address_2']) {
-				$data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['shipping_address_2'] . "\r\n" . $order_info['shipping_city'] . "\r\n" . $order_info['shipping_zone'] . "\r\n";
-			} else {
-				$data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['shipping_city'] . "\r\n" . $order_info['shipping_zone'] . "\r\n";
-			}
+        if ($this->cart->hasShipping()) {
+            $data['delivery_fullname'] = $order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname'];
 
-			$data['delivery_postcode'] = $order_info['shipping_postcode'];
-		} else {
-			$data['delivery_fullname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
+            if ($order_info['shipping_address_2']) {
+                $data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['shipping_address_2'] . "\r\n" . $order_info['shipping_city'] . "\r\n" . $order_info['shipping_zone'] . "\r\n";
+            } else {
+                $data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['shipping_city'] . "\r\n" . $order_info['shipping_zone'] . "\r\n";
+            }
 
-			if ($order_info['payment_address_2']) {
-				$data['delivery_address'] = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_address_2'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
-			} else {
-				$data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
-			}
+            $data['delivery_postcode'] = $order_info['shipping_postcode'];
+        } else {
+            $data['delivery_fullname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
 
-			$data['delivery_postcode'] = $order_info['payment_postcode'];
-		}
+            if ($order_info['payment_address_2']) {
+                $data['delivery_address'] = $order_info['payment_address_1'] . "\r\n" . $order_info['payment_address_2'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
+            } else {
+                $data['delivery_address'] = $order_info['shipping_address_1'] . "\r\n" . $order_info['payment_city'] . "\r\n" . $order_info['payment_zone'] . "\r\n";
+            }
 
-		$data['email_address'] = $order_info['email'];
-		$data['customer_phone_number']= $order_info['telephone'];
-		$data['test'] = $this->config->get('nochex_test');
-		$data['success_url'] = $this->url->link('checkout/success', '', 'SSL');
-		$data['cancel_url'] = $this->url->link('checkout/payment', '', 'SSL');
-		$data['declined_url'] = $this->url->link('payment/nochex/callback', 'method=decline', 'SSL');
-		$data['callback_url'] = $this->url->link('payment/nochex/callback', 'order=' . $this->session->data['order_id'], 'SSL');
+            $data['delivery_postcode'] = $order_info['payment_postcode'];
+        }
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/nochex.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/payment/nochex.tpl', $data);
-		} else {
-			return $this->load->view('default/template/payment/nochex.tpl', $data);
-		}
-	}
+        $data['email_address'] = $order_info['email'];
+        $data['customer_phone_number'] = $order_info['telephone'];
+        $data['test'] = $this->config->get('nochex_test');
+        $data['success_url'] = $this->url->link('checkout/success', '', 'SSL');
+        $data['cancel_url'] = $this->url->link('checkout/payment', '', 'SSL');
+        $data['declined_url'] = $this->url->link('payment/nochex/callback', 'method=decline', 'SSL');
+        $data['callback_url'] = $this->url->link('payment/nochex/callback', 'order=' . $this->session->data['order_id'], 'SSL');
 
-	public function callback() {
-		$this->load->language('payment/nochex');
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/nochex.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/payment/nochex.tpl', $data);
+        } else {
+            return $this->load->view('default/template/payment/nochex.tpl', $data);
+        }
+    }
 
-		if (isset($this->request->get['method']) && $this->request->get['method'] == 'decline') {
-			$this->session->data['error'] = $this->language->get('error_declined');
+    public function callback() {
+        $this->load->language('payment/nochex');
 
-			$this->response->redirect($this->url->link('checkout/cart'));
-		}
+        if (isset($this->request->get['method']) && $this->request->get['method'] == 'decline') {
+            $this->session->data['error'] = $this->language->get('error_declined');
 
-		if (isset($this->request->post['order_id'])) {
-			$order_id = $this->request->post['order_id'];
-		} else {
-			$order_id = 0;
-		}
+            $this->response->redirect($this->url->link('checkout/cart'));
+        }
 
-		$this->load->model('checkout/order');
+        if (isset($this->request->post['order_id'])) {
+            $order_id = $this->request->post['order_id'];
+        } else {
+            $order_id = 0;
+        }
 
-		$order_info = $this->model_checkout_order->getOrder($order_id);
+        $this->load->model('checkout/order');
 
-		if (!$order_info) {
-			$this->session->data['error'] = $this->language->get('error_no_order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
 
-			$this->response->redirect($this->url->link('checkout/cart'));
-		}
+        if (!$order_info) {
+            $this->session->data['error'] = $this->language->get('error_no_order');
 
-		// Fraud Verification Step.
-		$request = '';
+            $this->response->redirect($this->url->link('checkout/cart'));
+        }
 
-		foreach ($this->request->post as $key => $value) {
-			$request .= '&' . $key . '=' . urlencode(stripslashes($value));
-		}
+        // Fraud Verification Step.
+        $request = '';
 
-		$curl = curl_init('https://www.nochex.com/nochex.dll/apc/apc');
+        foreach ($this->request->post as $key => $value) {
+            $request .= '&' . $key . '=' . urlencode(stripslashes($value));
+        }
 
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, trim($request, '&'));
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HEADER, false);
-		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $curl = curl_init('https://www.nochex.com/nochex.dll/apc/apc');
 
-		$response = curl_exec($curl);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, trim($request, '&'));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_close($curl);
+        $response = curl_exec($curl);
 
-		if (strcmp($response, 'AUTHORISED') == 0) {
-			$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('nochex_order_status_id'));
-		} else {
-			$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'), 'Auto-Verification step failed. Manually check the transaction.');
-		}
+        curl_close($curl);
 
-		// Since it returned, the customer should see success.
-		// It's up to the store owner to manually verify payment.
-		$this->response->redirect($this->url->link('checkout/success', '', 'SSL'));
-	}
+        if (strcmp($response, 'AUTHORISED') == 0) {
+            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('nochex_order_status_id'));
+        } else {
+            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'), 'Auto-Verification step failed. Manually check the transaction.');
+        }
+
+        // Since it returned, the customer should see success.
+        // It's up to the store owner to manually verify payment.
+        $this->response->redirect($this->url->link('checkout/success', '', 'SSL'));
+    }
+
 }

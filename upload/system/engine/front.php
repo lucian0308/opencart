@@ -1,48 +1,51 @@
 <?php
+
 final class Front {
-	private $registry;
-	private $pre_action = array();
-	private $error;
 
-	public function __construct($registry) {
-		$this->registry = $registry;
-	}
+    private $registry;
+    private $pre_action = array();
+    private $error;
 
-	public function addPreAction($pre_action) {
-		$this->pre_action[] = $pre_action;
-	}
+    public function __construct($registry) {
+        $this->registry = $registry;
+    }
 
-	public function dispatch($action, $error) {
-		$this->error = $error;
+    public function addPreAction($pre_action) {
+        $this->pre_action[] = $pre_action;
+    }
 
-		foreach ($this->pre_action as $pre_action) {
-			$result = $this->execute($pre_action);
+    public function dispatch($action, $error) {
+        $this->error = $error;
 
-			if ($result) {
-				$action = $result;
+        foreach ($this->pre_action as $pre_action) {
+            $result = $this->execute($pre_action);
 
-				break;
-			}
-		}
+            if ($result) {
+                $action = $result;
 
-		while ($action) {
-			$action = $this->execute($action);
-		}
-	}
+                break;
+            }
+        }
 
-	private function execute($action) {
-		$result = $action->execute($this->registry);
+        while ($action) {
+            $action = $this->execute($action);
+        }
+    }
 
-		if (is_object($result)) {
-			$action = $result;
-		} elseif ($result === false) {
-			$action = $this->error;
+    private function execute($action) {
+        $result = $action->execute($this->registry);
 
-			$this->error = '';
-		} else {
-			$action = false;
-		}
+        if (is_object($result)) {
+            $action = $result;
+        } elseif ($result === false) {
+            $action = $this->error;
 
-		return $action;
-	}
+            $this->error = '';
+        } else {
+            $action = false;
+        }
+
+        return $action;
+    }
+
 }

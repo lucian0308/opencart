@@ -1,16 +1,17 @@
 <?php
+
 // Version
 define('VERSION', '2.0.3.1');
 
 // Configuration
 if (is_file('config.php')) {
-	require_once('config.php');
+    require_once('config.php');
 }
 
 // Install
 if (!defined('DIR_APPLICATION')) {
-	header('Location: ../install/index.php');
-	exit;
+    header('Location: ../install/index.php');
+    exit;
 }
 
 // Startup
@@ -28,16 +29,16 @@ $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 $registry->set('db', $db);
 
 // Settings
-$query = $db->query("SELECT * FROM " . DB_PREFIX . "setting " 
- . " " 
- . " WHERE store_id = '0'");
+$query = $db->query("SELECT * FROM " . DB_PREFIX . "setting "
+        . " "
+        . " WHERE store_id = '0'");
 
 foreach ($query->rows as $setting) {
-	if (!$setting['serialized']) {
-		$config->set($setting['key'], $setting['value']);
-	} else {
-		$config->set($setting['key'], unserialize($setting['value']));
-	}
+    if (!$setting['serialized']) {
+        $config->set($setting['key'], $setting['value']);
+    } else {
+        $config->set($setting['key'], unserialize($setting['value']));
+    }
 }
 
 // Loader
@@ -53,40 +54,40 @@ $log = new Log($config->get('config_error_filename'));
 $registry->set('log', $log);
 
 function error_handler($errno, $errstr, $errfile, $errline) {
-	global $log, $config;
+    global $log, $config;
 
-	// error suppressed with @
-	if (error_reporting() === 0) {
-		return false;
-	}
+    // error suppressed with @
+    if (error_reporting() === 0) {
+        return false;
+    }
 
-	switch ($errno) {
-		case E_NOTICE:
-		case E_USER_NOTICE:
-			$error = 'Notice';
-			break;
-		case E_WARNING:
-		case E_USER_WARNING:
-			$error = 'Warning';
-			break;
-		case E_ERROR:
-		case E_USER_ERROR:
-			$error = 'Fatal Error';
-			break;
-		default:
-			$error = 'Unknown';
-			break;
-	}
+    switch ($errno) {
+        case E_NOTICE:
+        case E_USER_NOTICE:
+            $error = 'Notice';
+            break;
+        case E_WARNING:
+        case E_USER_WARNING:
+            $error = 'Warning';
+            break;
+        case E_ERROR:
+        case E_USER_ERROR:
+            $error = 'Fatal Error';
+            break;
+        default:
+            $error = 'Unknown';
+            break;
+    }
 
-	if ($config->get('config_error_display')) {
-		echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b>';
-	}
+    if ($config->get('config_error_display')) {
+        echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b>';
+    }
 
-	if ($config->get('config_error_log')) {
-		$log->write('PHP ' . $error . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
-	}
+    if ($config->get('config_error_log')) {
+        $log->write('PHP ' . $error . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+    }
 
-	return true;
+    return true;
 }
 
 // Error Handler
@@ -115,7 +116,7 @@ $languages = array();
 $query = $db->query("SELECT * FROM `" . DB_PREFIX . "language`");
 
 foreach ($query->rows as $result) {
-	$languages[$result['code']] = $result;
+    $languages[$result['code']] = $result;
 }
 
 $config->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
@@ -150,7 +151,7 @@ $registry->set('event', $event);
 $query = $db->query("SELECT * FROM " . DB_PREFIX . "event");
 
 foreach ($query->rows as $result) {
-	$event->register($result['trigger'], $result['action']);
+    $event->register($result['trigger'], $result['action']);
 }
 
 // Front Controller
@@ -164,9 +165,9 @@ $controller->addPreAction(new Action('error/permission/check'));
 
 // Router
 if (isset($request->get['route'])) {
-	$action = new Action($request->get['route']);
+    $action = new Action($request->get['route']);
 } else {
-	$action = new Action('common/dashboard');
+    $action = new Action('common/dashboard');
 }
 
 // Dispatch

@@ -1,67 +1,70 @@
 <?php
+
 class ControllerCheckoutCoupon extends Controller {
-	public function index() {
-		if ($this->config->get('coupon_status')) {
-			$this->load->language('checkout/coupon');
 
-			$data['heading_title'] = $this->language->get('heading_title');
+    public function index() {
+        if ($this->config->get('coupon_status')) {
+            $this->load->language('checkout/coupon');
 
-			$data['text_loading'] = $this->language->get('text_loading');
+            $data['heading_title'] = $this->language->get('heading_title');
 
-			$data['entry_coupon'] = $this->language->get('entry_coupon');
+            $data['text_loading'] = $this->language->get('text_loading');
 
-			$data['button_coupon'] = $this->language->get('button_coupon');
+            $data['entry_coupon'] = $this->language->get('entry_coupon');
 
-			if (isset($this->session->data['coupon'])) {
-				$data['coupon'] = $this->session->data['coupon'];
-			} else {
-				$data['coupon'] = '';
-			}
+            $data['button_coupon'] = $this->language->get('button_coupon');
 
-			if (isset($this->request->get['redirect']) && !empty($this->request->get['redirect'])) {
-				$data['redirect'] = $this->request->get['redirect'];
-			} else {
-				$data['redirect'] = $this->url->link('checkout/cart');
-			}
+            if (isset($this->session->data['coupon'])) {
+                $data['coupon'] = $this->session->data['coupon'];
+            } else {
+                $data['coupon'] = '';
+            }
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/coupon.tpl')) {
-				return $this->load->view($this->config->get('config_template') . '/template/checkout/coupon.tpl', $data);
-			} else {
-				return $this->load->view('default/template/checkout/coupon.tpl', $data);
-			}
-		}
-	}
+            if (isset($this->request->get['redirect']) && !empty($this->request->get['redirect'])) {
+                $data['redirect'] = $this->request->get['redirect'];
+            } else {
+                $data['redirect'] = $this->url->link('checkout/cart');
+            }
 
-	public function coupon() {
-		$this->load->language('checkout/coupon');
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/coupon.tpl')) {
+                return $this->load->view($this->config->get('config_template') . '/template/checkout/coupon.tpl', $data);
+            } else {
+                return $this->load->view('default/template/checkout/coupon.tpl', $data);
+            }
+        }
+    }
 
-		$json = array();
+    public function coupon() {
+        $this->load->language('checkout/coupon');
 
-		$this->load->model('checkout/coupon');
+        $json = array();
 
-		if (isset($this->request->post['coupon'])) {
-			$coupon = $this->request->post['coupon'];
-		} else {
-			$coupon = '';
-		}
+        $this->load->model('checkout/coupon');
 
-		$coupon_info = $this->model_checkout_coupon->getCoupon($coupon);
+        if (isset($this->request->post['coupon'])) {
+            $coupon = $this->request->post['coupon'];
+        } else {
+            $coupon = '';
+        }
 
-		if (empty($this->request->post['coupon'])) {
-			$json['error'] = $this->language->get('error_empty');
-			
-			unset($this->session->data['coupon']);
-		} elseif ($coupon_info) {
-			$this->session->data['coupon'] = $this->request->post['coupon'];
+        $coupon_info = $this->model_checkout_coupon->getCoupon($coupon);
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (empty($this->request->post['coupon'])) {
+            $json['error'] = $this->language->get('error_empty');
 
-			$json['redirect'] = $this->url->link('checkout/cart');
-		} else {
-			$json['error'] = $this->language->get('error_coupon');
-		}
+            unset($this->session->data['coupon']);
+        } elseif ($coupon_info) {
+            $this->session->data['coupon'] = $this->request->post['coupon'];
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $json['redirect'] = $this->url->link('checkout/cart');
+        } else {
+            $json['error'] = $this->language->get('error_coupon');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
