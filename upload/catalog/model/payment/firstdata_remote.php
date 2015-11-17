@@ -3,7 +3,8 @@ class ModelPaymentFirstdataRemote extends Model {
 	public function getMethod($address, $total) {
 		$this->load->language('payment/firstdata_remote');
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE `geo_zone_id` = '" . (int)$this->config->get('firstdata_geo_zone_id') . "' AND `country_id` = '" . (int)$address['country_id'] . "' AND (`zone_id` = '" . (int)$address['zone_id'] . "' OR `zone_id` = '0')");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` " 
+ . " WHERE `geo_zone_id` = '" . (int)$this->config->get('firstdata_geo_zone_id') . "' AND `country_id` = '" . (int)$address['country_id'] . "' AND (`zone_id` = '" . (int)$address['zone_id'] . "' OR `zone_id` = '0')");
 
 		if ($this->config->get('firstdata_remote_total') > 0 && $this->config->get('firstdata_remote_total') > $total) {
 			$status = false;
@@ -273,7 +274,8 @@ class ModelPaymentFirstdataRemote extends Model {
 	public function getStoredCards() {
 		$customer_id = $this->customer->getId();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_remote_card WHERE customer_id = '" . (int)$customer_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_remote_card " 
+ . " WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->rows;
 	}

@@ -6,7 +6,8 @@ class ControllerMaxmind extends Controller {
 		$db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `maxmind_key` = '" . $db->escape($this->request->post['maxmind_key']) . "', `maxmind_score` = '" . (int)$this->request->post['maxmind_score'] . "', `maxmind_order_status_id` = '" . (int)$this->request->post['maxmind_order_status_id'] . "'  WHERE `store_id` = '0' AND `code` = 'maxmind'");
+			$db->query("REPLACE INTO `" . DB_PREFIX . "setting` SET `maxmind_key` = '" . $db->escape($this->request->post['maxmind_key']) . "', `maxmind_score` = '" . (int)$this->request->post['maxmind_score'] . "', `maxmind_order_status_id` = '" . (int)$this->request->post['maxmind_order_status_id'] . "'  " 
+ . " WHERE `store_id` = '0' AND `code` = 'maxmind'");
 
 			$db->query("INSERT INTO `oc_extension` (`type`, `code`) VALUES ('fraud', 'maxmind')");
 
@@ -58,7 +59,9 @@ class ControllerMaxmind extends Controller {
 				$data['maxmind_score'] = '80';
 			}
 
-			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE language_id = '1'  ORDER BY name ASC")->rows;
+			$data['order_statuses'] = $db->query("SELECT * FROM " . DB_PREFIX . "order_status " 
+ . " WHERE language_id = '1'  " 
+ . " ORDER BY name ASC")->rows;
 
 			if (isset($this->request->post['maxmind_order_status_id'])) {
 				$data['maxmind_order_status_id'] = $this->request->post['maxmind_order_status_id'];

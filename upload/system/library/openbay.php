@@ -114,7 +114,8 @@ final class Openbay {
 	}
 
 	private function getInstalled() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = 'openbay'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension " 
+ . " WHERE `type` = 'openbay'");
 
 		foreach ($query->rows as $result) {
 			$this->installed_markets[] = $result['code'];
@@ -151,7 +152,8 @@ final class Openbay {
 	}
 
 	public function testDbTable($table) {
-		$res = $this->db->query("SELECT `table_name` AS `c` FROM `information_schema`.`tables` WHERE `table_schema` = DATABASE()");
+		$res = $this->db->query("SELECT `table_name` AS `c` FROM `information_schema`.`tables` " 
+ . " WHERE `table_schema` = DATABASE()");
 
 		$tables = array();
 
@@ -181,23 +183,12 @@ final class Openbay {
 	public function getTaxRates($tax_class_id) {
 		$tax_rates = array();
 
-		$tax_query = $this->db->query("SELECT
-					tr2.tax_rate_id,
-					tr2.name,
-					tr2.rate,
-					tr2.type,
-					tr1.priority
-				FROM " . DB_PREFIX . "tax_rule tr1
-				LEFT JOIN " . DB_PREFIX . "tax_rate tr2 ON (tr1.tax_rate_id = tr2.tax_rate_id)
-				INNER JOIN " . DB_PREFIX . "tax_rate_to_customer_group tr2cg ON (tr2.tax_rate_id = tr2cg.tax_rate_id)
-				LEFT JOIN " . DB_PREFIX . "zone_to_geo_zone z2gz ON (tr2.geo_zone_id = z2gz.geo_zone_id)
-				LEFT JOIN " . DB_PREFIX . "geo_zone gz ON (tr2.geo_zone_id = gz.geo_zone_id)
-				WHERE tr1.tax_class_id = '" . (int)$tax_class_id . "'
-				AND tr1.based = 'shipping'
-				AND tr2cg.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'
-				AND z2gz.country_id = '" . (int)$this->config->get('config_country_id') . "'
-				AND (z2gz.zone_id = '0' OR z2gz.zone_id = '" . (int)$this->config->get('config_zone_id') . "')
-				ORDER BY tr1.priority ASC");
+		$tax_query = $this->db->query("SELECT tr2.tax_rate_id, tr2.name, tr2.rate, tr2.type, tr1.priority FROM " . DB_PREFIX . "tax_rule tr1 " 
+ . " LEFT JOIN " . DB_PREFIX . "tax_rate tr2 ON (tr1.tax_rate_id = tr2.tax_rate_id) INNER JOIN " . DB_PREFIX . "tax_rate_to_customer_group tr2cg ON (tr2.tax_rate_id = tr2cg.tax_rate_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "zone_to_geo_zone z2gz ON (tr2.geo_zone_id = z2gz.geo_zone_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "geo_zone gz ON (tr2.geo_zone_id = gz.geo_zone_id) " 
+ . " WHERE tr1.tax_class_id = '" . (int)$tax_class_id . "' AND tr1.based = 'shipping' AND tr2cg.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND z2gz.country_id = '" . (int)$this->config->get('config_country_id') . "' AND (z2gz.zone_id = '0' OR z2gz.zone_id = '" . (int)$this->config->get('config_zone_id') . "') " 
+ . " ORDER BY tr1.priority ASC");
 
 		foreach ($tax_query->rows as $result) {
 			$tax_rates[$result['tax_rate_id']] = array(
@@ -225,7 +216,8 @@ final class Openbay {
 	}
 
 	public function getZoneId($name, $country_id) {
-		$query = $this->db->query("SELECT `zone_id` FROM `" . DB_PREFIX . "zone` WHERE `country_id` = '" . (int)$country_id . "' AND status = '1' AND `name` = '" . $this->db->escape($name) . "'");
+		$query = $this->db->query("SELECT `zone_id` FROM `" . DB_PREFIX . "zone` " 
+ . " WHERE `country_id` = '" . (int)$country_id . "' AND status = '1' AND `name` = '" . $this->db->escape($name) . "'");
 
 		if($query->num_rows > 0) {
 			return $query->row['zone_id'];
@@ -242,13 +234,17 @@ final class Openbay {
 		$language->load($order_info['language_directory']);
 		$language->load('mail/order');
 
-		$order_status = $this->db->query("SELECT `name` FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1")->row['name'];
+		$order_status = $this->db->query("SELECT `name` FROM " . DB_PREFIX . "order_status " 
+ . " WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1")->row['name'];
 
 		// Order Totals
-		$order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE `order_id` = '" . (int)$order_id . "' ORDER BY `sort_order` ASC");
+		$order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' " 
+ . " ORDER BY `sort_order` ASC");
 
 		//Order contents
-		$order_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = '" . (int)$order_id . "'");
+		$order_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "'");
 
 		$subject = sprintf($language->get('text_new_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'), $order_id);
 
@@ -262,7 +258,8 @@ final class Openbay {
 		foreach ($order_product_query->rows as $product) {
 			$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
 
-			$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
+			$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option " 
+ . " WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
 
 			foreach ($order_option_query->rows as $option) {
 				if ($option['type'] != 'file') {
@@ -340,7 +337,8 @@ final class Openbay {
 
 	public function getProductModelNumber($product_id, $sku = null) {
 		if($sku != null) {
-			$qry = $this->db->query("SELECT `sku` FROM `" . DB_PREFIX . "product_option_variant` WHERE `product_id` = '" . (int)$product_id . "' AND `sku` = '" . $this->db->escape($sku) . "'");
+			$qry = $this->db->query("SELECT `sku` FROM `" . DB_PREFIX . "product_option_variant` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "' AND `sku` = '" . $this->db->escape($sku) . "'");
 
 			if($qry->num_rows > 0) {
 				return $qry->row['sku'];
@@ -348,7 +346,8 @@ final class Openbay {
 				return false;
 			}
 		}else{
-			$qry = $this->db->query("SELECT `model` FROM `" . DB_PREFIX . "product` WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1");
+			$qry = $this->db->query("SELECT `model` FROM `" . DB_PREFIX . "product` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1");
 
 			if($qry->num_rows > 0) {
 				return $qry->row['model'];
@@ -375,7 +374,8 @@ final class Openbay {
 	}
 
 	public function getUserByEmail($email) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE `email` = '" . $this->db->escape($email) . "'");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` " 
+ . " WHERE `email` = '" . $this->db->escape($email) . "'");
 
 		if($qry->num_rows){
 			return $qry->row['customer_id'];
@@ -387,13 +387,21 @@ final class Openbay {
 	public function getProductOptions($product_id) {
 		$product_option_data = array();
 
-		$product_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order");
+		$product_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option po " 
+ . " LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) " 
+ . " WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' " 
+ . " ORDER BY o.sort_order");
 
 		foreach ($product_option_query->rows as $product_option) {
 			if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
 				$product_option_value_data = array();
 
-				$product_option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option_value pov LEFT JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_id = '" . (int)$product_option['product_option_id'] . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order");
+				$product_option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option_value pov " 
+ . " LEFT JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) " 
+ . " WHERE pov.product_option_id = '" . (int)$product_option['product_option_id'] . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' " 
+ . " ORDER BY ov.sort_order");
 
 				foreach ($product_option_value_query->rows as $product_option_value) {
 					$product_option_value_data[] = array(
@@ -436,7 +444,8 @@ final class Openbay {
 	}
 
 	public function getOrderProducts($order_id) {
-		$order_products = $this->db->query("SELECT `product_id`, `order_product_id` FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = '" . (int)$order_id . "'");
+		$order_products = $this->db->query("SELECT `product_id`, `order_product_id` FROM `" . DB_PREFIX . "order_product` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "'");
 
 		if($order_products->num_rows > 0) {
 			return $order_products->rows;
@@ -448,7 +457,8 @@ final class Openbay {
 	public function getOrderProductVariant($order_id, $product_id, $order_product_id) {
 		$this->load->model('module/openstock');
 
-		$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product_id . "'");
+		$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option " 
+ . " WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product_id . "'");
 
 		if ($order_option_query->num_rows) {
 			$options = array();

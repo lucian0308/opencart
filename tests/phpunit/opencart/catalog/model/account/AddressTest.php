@@ -54,13 +54,15 @@ class CatalogModelAccountAddressTest extends OpenCartTest {
 			$this->assertEquals($value, $address[$key]);
 		}
 		
-		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = 1")->row;
+		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer " 
+ . " WHERE customer_id = 1")->row;
 		$this->assertEquals($addressId, $customer['address_id']);
 		
 		$address['default'] = false;
 		
 		$this->model_account_address->addAddress($address);
-		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = 1")->row;
+		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer " 
+ . " WHERE customer_id = 1")->row;
 		$this->assertEquals($addressId, $customer['address_id'], 'Changed default address unnecessarily');
 	}
 	
@@ -106,7 +108,8 @@ class CatalogModelAccountAddressTest extends OpenCartTest {
 		$addressId = $this->model_account_address->addAddress($address);
 		$address['default'] = false;
 		$this->model_account_address->editAddress($addressId, $address);
-		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = 1")->row;
+		$customer = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer " 
+ . " WHERE customer_id = 1")->row;
 		$this->assertEquals($addressId, $customer['address_id'], 'Changed default address unnecessarily');
 	}
 	

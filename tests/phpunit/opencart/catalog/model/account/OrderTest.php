@@ -156,7 +156,8 @@ class CatalogModelAccountOrderTest extends OpenCartTest {
 		);
 		
 		$orderId = $this->model_checkout_order->addOrder($order);
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = 1 WHERE order_id = $orderId");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = 1 " 
+ . " WHERE order_id = $orderId");
 	}
 	
 	public function testGetOrder() {

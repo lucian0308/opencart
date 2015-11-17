@@ -3,7 +3,8 @@ class ModelPaymentFirstdata extends Model {
 	public function getMethod($address, $total) {
 		$this->load->language('payment/firstdata');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('firstdata_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone " 
+ . " WHERE geo_zone_id = '" . (int)$this->config->get('firstdata_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		if ($this->config->get('firstdata_total') > 0 && $this->config->get('firstdata_total') > $total) {
 			$status = false;
@@ -42,7 +43,8 @@ class ModelPaymentFirstdata extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$order = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$order = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		return $order->row;
 	}
@@ -85,13 +87,15 @@ class ModelPaymentFirstdata extends Model {
 	public function getStoredCards() {
 		$customer_id = $this->customer->getId();
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_card` WHERE `customer_id` = '" . (int)$customer_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_card` " 
+ . " WHERE `customer_id` = '" . (int)$customer_id . "'");
 
 		return $query->rows;
 	}
 
 	public function storeCard($token, $customer_id, $month, $year, $digits) {
-		$existing_card = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_card` WHERE `token` = '" . $this->db->escape($token) . "' AND `customer_id` = '" . (int)$customer_id . "' LIMIT 1");
+		$existing_card = $this->db->query("SELECT * FROM `" . DB_PREFIX . "firstdata_card` " 
+ . " WHERE `token` = '" . $this->db->escape($token) . "' AND `customer_id` = '" . (int)$customer_id . "' LIMIT 1");
 
 		if ($existing_card->num_rows > 0) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_card` SET `expire_month` = '" . $this->db->escape($month) . "', `expire_year` = '" . $this->db->escape($year) . "', `digits` = '" . $this->db->escape($digits) . "'");
@@ -109,10 +113,12 @@ class ModelPaymentFirstdata extends Model {
 	}
 
 	public function updateVoidStatus($order_id, $status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_order` SET `void_status` = '" . (int)$status . "' WHERE `order_id` = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_order` SET `void_status` = '" . (int)$status . "' " 
+ . " WHERE `order_id` = '" . (int)$order_id . "'");
 	}
 
 	public function updateCaptureStatus($order_id, $status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_order` SET `capture_status` = '" . (int)$status . "' WHERE `order_id` = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_order` SET `capture_status` = '" . (int)$status . "' " 
+ . " WHERE `order_id` = '" . (int)$order_id . "'");
 	}
 }

@@ -113,7 +113,8 @@ class Amazon {
 		$logger = new \Log('amazon_stocks.log');
 		$logger->write('productUpdateListen (' . $product_id . ')');
 
-		$product = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "product` WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1")->row;
+		$product = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "product` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1")->row;
 
 		if ($this->openbay->addonLoad('openstock') && (isset($product['has_option']) && $product['has_option'] == 1)) {
 			$this->load->model('module/openstock');
@@ -313,7 +314,8 @@ class Amazon {
 		foreach($product_id_array as $product_id) {
 			$amazon_rows = $this->getLinkedSkus($product_id);
 			foreach($amazon_rows as $amazon_row) {
-				$product_row = $this->db->query("SELECT `quantity`, `status` FROM `" . DB_PREFIX . "product` WHERE `product_id` = '" . (int)$product_id . "'")->row;
+				$product_row = $this->db->query("SELECT `quantity`, `status` FROM `" . DB_PREFIX . "product` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "'")->row;
 
 				if(!empty($product_row)) {
 					if($end_inactive && $product_row['status'] == '0') {
@@ -334,11 +336,14 @@ class Amazon {
 	}
 
 	public function getLinkedSkus($product_id, $var='') {
-		return $this->db->query("SELECT `amazon_sku` FROM `" . DB_PREFIX . "amazon_product_link` WHERE `product_id` = '" . (int)$product_id . "' AND `var` = '" . $this->db->escape($var) . "'")->rows;
+		return $this->db->query("SELECT `amazon_sku` FROM `" . DB_PREFIX . "amazon_product_link` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "' AND `var` = '" . $this->db->escape($var) . "'")->rows;
 	}
 
 	public function getOrderdProducts($order_id) {
-		return $this->db->query("SELECT `op`.`product_id`, `p`.`quantity` as `quantity_left` FROM `" . DB_PREFIX . "order_product` as `op` LEFT JOIN `" . DB_PREFIX . "product` as `p` ON `p`.`product_id` = `op`.`product_id` WHERE `op`.`order_id` = '" . (int)$order_id . "'")->rows;
+		return $this->db->query("SELECT `op`.`product_id`, `p`.`quantity` as `quantity_left` FROM `" . DB_PREFIX . "order_product` as `op` " 
+ . " LEFT JOIN `" . DB_PREFIX . "product` as `p` ON `p`.`product_id` = `op`.`product_id` " 
+ . " WHERE `op`.`order_id` = '" . (int)$order_id . "'")->rows;
 	}
 
 	public function validate(){
@@ -353,7 +358,8 @@ class Amazon {
 	}
 
 	public function deleteProduct($product_id){
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "amazon_product_link` WHERE `product_id` = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "amazon_product_link` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "'");
 	}
 
 	public function orderDelete($order_id){
@@ -363,7 +369,8 @@ class Amazon {
 	}
 
 	public function getOrder($order_id) {
-		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "amazon_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "amazon_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		if($qry->num_rows > 0){
 			return $qry->row;

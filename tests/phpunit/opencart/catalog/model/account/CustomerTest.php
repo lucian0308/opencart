@@ -54,7 +54,8 @@ class CatalogModelAccountCustomerTest extends OpenCartTest {
 	public function testEditPassword() {
 		$this->model_account_customer->editPassword('customer@localhost', 'password');
 
-		$row = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = 1")->row;
+		$row = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer " 
+ . " WHERE customer_id = 1")->row;
 
 		$this->assertNotEmpty($row['password']);
 		$this->assertNotEmpty($row['salt']);
@@ -65,7 +66,8 @@ class CatalogModelAccountCustomerTest extends OpenCartTest {
 
 		$this->model_account_customer->editNewsletter(1);
 
-		$row = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = 1")->row;
+		$row = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer " 
+ . " WHERE customer_id = 1")->row;
 
 		$this->assertEquals(1, $row['newsletter']);
 	}

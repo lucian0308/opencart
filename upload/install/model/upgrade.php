@@ -309,7 +309,9 @@ class ModelUpgrade extends Model {
 		// Update any additional sql thats required
 
 		// Settings
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' ORDER BY `store_id` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` " 
+ . " WHERE `store_id` = '0' " 
+ . " ORDER BY `store_id` ASC");
 
 		foreach ($query->rows as $setting) {
 			if (!$setting['serialized']) {
@@ -358,7 +360,8 @@ class ModelUpgrade extends Model {
 			if ($result['serialized'] && preg_match('/^(a:)/', $result['value'])) {
 				$value = unserialize($result['value']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = '" . $this->db->escape(json_encode($value)) . "' WHERE `setting_id` = '" . (int)$result['setting_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = '" . $this->db->escape(json_encode($value)) . "' " 
+ . " WHERE `setting_id` = '" . (int)$result['setting_id'] . "'");
 			}
 		}
 
@@ -369,19 +372,22 @@ class ModelUpgrade extends Model {
 			if (preg_match('/^(a:)/', $result['cart'])) {
 				$cart = unserialize($result['cart']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `cart` = '" . $this->db->escape(json_encode($cart)) . "' WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `cart` = '" . $this->db->escape(json_encode($cart)) . "' " 
+ . " WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
 			}
 
 			if (preg_match('/^(a:)/', $result['wishlist'])) {
 				$wishlist = unserialize($result['wishlist']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `wishlist` = '" . $this->db->escape(json_encode($wishlist)) . "' WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `wishlist` = '" . $this->db->escape(json_encode($wishlist)) . "' " 
+ . " WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
 			}
 
 			if (preg_match('/^(a:)/', $result['custom_field'])) {
 				$custom_field = unserialize($result['custom_field']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' " 
+ . " WHERE `customer_id` = '" . (int)$result['customer_id'] . "'");
 			}
 		}
 
@@ -392,7 +398,8 @@ class ModelUpgrade extends Model {
 			if (preg_match('/^(a:)/', $result['custom_field'])) {
 				$custom_field = unserialize($result['custom_field']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "address` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' WHERE `address_id` = '" . (int)$result['address_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "address` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' " 
+ . " WHERE `address_id` = '" . (int)$result['address_id'] . "'");
 			}
 		}
 
@@ -403,19 +410,22 @@ class ModelUpgrade extends Model {
 			if (preg_match('/^(a:)/', $result['custom_field'])) {
 				$custom_field = unserialize($result['custom_field']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' WHERE `order_id` = '" . (int)$result['order_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' " 
+ . " WHERE `order_id` = '" . (int)$result['order_id'] . "'");
 			}
 
 			if (preg_match('/^(a:)/', $result['payment_custom_field'])) {
 				$custom_field = unserialize($result['payment_custom_field']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' WHERE `order_id` = '" . (int)$result['order_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' " 
+ . " WHERE `order_id` = '" . (int)$result['order_id'] . "'");
 			}
 
 			if (preg_match('/^(a:)/', $result['shipping_custom_field'])) {
 				$custom_field = unserialize($result['shipping_custom_field']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `shipping_custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' WHERE `order_id` = '" . (int)$result['order_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `shipping_custom_field` = '" . $this->db->escape(json_encode($custom_field)) . "' " 
+ . " WHERE `order_id` = '" . (int)$result['order_id'] . "'");
 			}
 		}
 
@@ -426,7 +436,8 @@ class ModelUpgrade extends Model {
 			if (preg_match('/^(a:)/', $result['permission'])) {
 				$permission = unserialize($result['permission']);
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET `permission` = '" . $this->db->escape(json_encode($permission)) . "' WHERE `user_group_id` = '" . (int)$result['user_group_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET `permission` = '" . $this->db->escape(json_encode($permission)) . "' " 
+ . " WHERE `user_group_id` = '" . (int)$result['user_group_id'] . "'");
 			}
 		}
 
@@ -436,16 +447,20 @@ class ModelUpgrade extends Model {
 
 	// Function to repair any erroneous categories that are not in the category path table.
 	public function repairCategories($parent_id = 0) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` WHERE `parent_id` = '" . (int)$parent_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` " 
+ . " WHERE `parent_id` = '" . (int)$parent_id . "'");
 
 		foreach ($query->rows as $category) {
 			// Delete the path below the current one
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "category_path` WHERE `category_id` = '" . (int)$category['category_id'] . "'");
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "category_path` " 
+ . " WHERE `category_id` = '" . (int)$category['category_id'] . "'");
 
 			// Fix for records with no paths
 			$level = 0;
 
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category_path` WHERE `category_id` = '" . (int)$parent_id . "' ORDER BY `level` ASC");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category_path` " 
+ . " WHERE `category_id` = '" . (int)$parent_id . "' " 
+ . " ORDER BY `level` ASC");
 
 			foreach ($query->rows as $result) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "category_path` SET `category_id` = '" . (int)$category['category_id'] . "', `path_id` = '" . (int)$result['path_id'] . "', `level` = '" . (int)$level . "'");

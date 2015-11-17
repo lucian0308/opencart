@@ -1,7 +1,8 @@
 <?php
 class ModelAccountApi extends Model {
 	public function getApiByKey($key) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` WHERE `key` = '" . $this->db->escape($key) . "' AND status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` " 
+ . " WHERE `key` = '" . $this->db->escape($key) . "' AND status = '1'");
 
 		return $query->row;
 	}
@@ -25,9 +26,11 @@ class ModelAccountApi extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
+			$sql .= " " 
+ . " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " " 
+ . " ORDER BY name";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -54,7 +57,8 @@ class ModelAccountApi extends Model {
 	}
 
 	public function getApiIps($api_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_ip` WHERE api_id = '" . (int)$api_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_ip` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		return $query->rows;
 	}

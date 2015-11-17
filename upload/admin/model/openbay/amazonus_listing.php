@@ -92,13 +92,7 @@ class ModelOpenbayAmazonusListing extends Model {
 		$response = (array)$response;
 
 		if ($response['status'] === 1) {
-			$this->db->query("
-			REPLACE INTO `" . DB_PREFIX . "amazonus_product`
-			SET `product_id` = " . (int)$data['product_id'] . ",
-				`status` = 'uploaded',
-				`version` = 3,
-				`var` = ''
-		");
+			$this->db->query(" REPLACE INTO `" . DB_PREFIX . "amazonus_product` SET `product_id` = " . (int)$data['product_id'] . ", `status` = 'uploaded', `version` = 3, `var` = '' ");
 		}
 
 		return $response;
@@ -117,10 +111,8 @@ class ModelOpenbayAmazonusListing extends Model {
 
 		$imploded_ids = implode(',', $imploded_ids);
 
-		$this->db->query("
-			DELETE FROM " . DB_PREFIX .  "amazonus_product_search
-			WHERE product_id IN ($imploded_ids)
-		");
+		$this->db->query(" DELETE FROM " . DB_PREFIX . "amazonus_product_search " 
+ . " WHERE product_id IN ($imploded_ids) ");
 	}
 
 	public function doBulkListing($data) {
@@ -160,13 +152,7 @@ class ModelOpenbayAmazonusListing extends Model {
 
 			if ($response['status'] == 1) {
 				foreach ($request as $product) {
-					$this->db->query("
-						REPLACE INTO `" . DB_PREFIX . "amazonus_product`
-						SET `product_id` = " . (int)$product['product_id'] . ",
-							`status` = 'uploaded',
-							`var` = '',
-							`version` = 3
-					");
+					$this->db->query(" REPLACE INTO `" . DB_PREFIX . "amazonus_product` SET `product_id` = " . (int)$product['product_id'] . ", `status` = 'uploaded', `var` = '', `version` = 3 ");
 				}
 
 				return true;
@@ -179,9 +165,7 @@ class ModelOpenbayAmazonusListing extends Model {
 	public function doBulkSearch($search_data) {
 		foreach ($search_data as $products) {
 			foreach ($products as $product) {
-				$this->db->query("
-					REPLACE INTO " . DB_PREFIX . "amazonus_product_search (product_id, `status`)
-					VALUES (" . (int)$product['product_id'] . ", 'searching')");
+				$this->db->query(" REPLACE INTO " . DB_PREFIX . "amazonus_product_search (product_id, `status`) VALUES (" . (int)$product['product_id'] . ", 'searching')");
 			}
 		}
 

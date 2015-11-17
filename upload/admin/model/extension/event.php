@@ -5,6 +5,7 @@ class ModelExtensionEvent extends Model {
 	}
 
 	public function deleteEvent($code) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "event WHERE `code` = '" . $this->db->escape($code) . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "event " 
+ . " WHERE `code` = '" . $this->db->escape($code) . "'");
 	}
 }

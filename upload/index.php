@@ -33,9 +33,11 @@ $registry->set('db', $db);
 
 // Store
 if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) {
-	$store_query = $db->query("SELECT * FROM " . DB_PREFIX . "store WHERE REPLACE(`ssl`, 'www.', '') = '" . $db->escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
+	$store_query = $db->query("SELECT * FROM " . DB_PREFIX . "store " 
+ . " WHERE REPLACE(`ssl`, 'www.', '') = '" . $db->escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
 } else {
-	$store_query = $db->query("SELECT * FROM " . DB_PREFIX . "store WHERE REPLACE(`url`, 'www.', '') = '" . $db->escape('http://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
+	$store_query = $db->query("SELECT * FROM " . DB_PREFIX . "store " 
+ . " WHERE REPLACE(`url`, 'www.', '') = '" . $db->escape('http://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
 }
 
 if ($store_query->num_rows) {
@@ -45,7 +47,9 @@ if ($store_query->num_rows) {
 }
 
 // Settings
-$query = $db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' OR store_id = '" . (int)$config->get('config_store_id') . "' ORDER BY store_id ASC");
+$query = $db->query("SELECT * FROM `" . DB_PREFIX . "setting` " 
+ . " WHERE store_id = '0' OR store_id = '" . (int)$config->get('config_store_id') . "' " 
+ . " ORDER BY store_id ASC");
 
 foreach ($query->rows as $result) {
 	if (!$result['serialized']) {
@@ -124,9 +128,13 @@ $registry->set('cache', $cache);
 
 // Session
 if (isset($request->get['token']) && isset($request->get['route']) && substr($request->get['route'], 0, 4) == 'api/') {
-	$db->query("DELETE FROM `" . DB_PREFIX . "api_session` WHERE TIMESTAMPADD(HOUR, 1, date_modified) < NOW()");
+	$db->query("DELETE FROM `" . DB_PREFIX . "api_session` " 
+ . " WHERE TIMESTAMPADD(HOUR, 1, date_modified) < NOW()");
 
-	$query = $db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "api` `a` LEFT JOIN `" . DB_PREFIX . "api_session` `as` ON (a.api_id = as.api_id) LEFT JOIN " . DB_PREFIX . "api_ip `ai` ON (as.api_id = ai.api_id) WHERE a.status = '1' AND as.token = '" . $db->escape($request->get['token']) . "' AND ai.ip = '" . $db->escape($request->server['REMOTE_ADDR']) . "'");
+	$query = $db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "api` `a` " 
+ . " LEFT JOIN `" . DB_PREFIX . "api_session` `as` ON (a.api_id = as.api_id) " 
+ . " LEFT JOIN " . DB_PREFIX . "api_ip `ai` ON (as.api_id = ai.api_id) " 
+ . " WHERE a.status = '1' AND as.token = '" . $db->escape($request->get['token']) . "' AND ai.ip = '" . $db->escape($request->server['REMOTE_ADDR']) . "'");
 
 	if ($query->num_rows) {
 		// Does not seem PHP is able to handle sessions as objects properly so so wrote my own class
@@ -134,7 +142,8 @@ if (isset($request->get['token']) && isset($request->get['route']) && substr($re
 		$registry->set('session', $session);
 
 		// keep the session alive
-		$db->query("UPDATE `" . DB_PREFIX . "api_session` SET date_modified = NOW() WHERE api_session_id = '" . $query->row['api_session_id'] . "'");
+		$db->query("UPDATE `" . DB_PREFIX . "api_session` SET date_modified = NOW() " 
+ . " WHERE api_session_id = '" . $query->row['api_session_id'] . "'");
 	}
 } else {
 	$session = new Session();
@@ -144,7 +153,8 @@ if (isset($request->get['token']) && isset($request->get['route']) && substr($re
 // Language Detection
 $languages = array();
 
-$query = $db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'");
+$query = $db->query("SELECT * FROM `" . DB_PREFIX . "language` " 
+ . " WHERE status = '1'");
 
 foreach ($query->rows as $result) {
 	$languages[$result['code']] = $result;
@@ -214,7 +224,8 @@ if ($customer->isLogged()) {
 if (isset($request->get['tracking'])) {
 	setcookie('tracking', $request->get['tracking'], time() + 3600 * 24 * 1000, '/');
 
-	$db->query("UPDATE `" . DB_PREFIX . "marketing` SET clicks = (clicks + 1) WHERE code = '" . $db->escape($request->get['tracking']) . "'");
+	$db->query("UPDATE `" . DB_PREFIX . "marketing` SET clicks = (clicks + 1) " 
+ . " WHERE code = '" . $db->escape($request->get['tracking']) . "'");
 }
 
 // Affiliate

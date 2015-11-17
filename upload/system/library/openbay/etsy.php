@@ -149,9 +149,10 @@ final class Etsy {
 		$response = $this->call('v1/etsy/data/type/getSetup/', 'GET');
 
 		foreach ($response['data'] as $key => $options) {
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_setting_option` WHERE  `key` = '" . $this->db->escape($key) . "' LIMIT 1");
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_setting_option` " 
+ . " WHERE `key` = '" . $this->db->escape($key) . "' LIMIT 1");
 
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "etsy_setting_option` SET `data` = '" . $this->db->escape(serialize($options)) . "', `key` = '" . $this->db->escape($key) . "', `last_updated`  = now()");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "etsy_setting_option` SET `data` = '" . $this->db->escape(serialize($options)) . "', `key` = '" . $this->db->escape($key) . "', `last_updated` = now()");
 
 			$this->log('Updated Etsy option: ' . $key);
 		}
@@ -160,7 +161,8 @@ final class Etsy {
 	}
 
 	public function getSetting($key) {
-		$qry = $this->db->query("SELECT `data` FROM `" . DB_PREFIX . "etsy_setting_option` WHERE `key` = '" . $this->db->escape($key) . "' LIMIT 1");
+		$qry = $this->db->query("SELECT `data` FROM `" . DB_PREFIX . "etsy_setting_option` " 
+ . " WHERE `key` = '" . $this->db->escape($key) . "' LIMIT 1");
 
 		if($qry->num_rows > 0) {
 			return unserialize($qry->row['data']);
@@ -178,7 +180,10 @@ final class Etsy {
 			$sql_limit = '';
 		}
 
-		$qry = $this->db->query("SELECT `el`.*, `p`.`quantity` FROM `" . DB_PREFIX . "etsy_listing` `el` LEFT JOIN `" . DB_PREFIX . "product` `p` ON `el`.`product_id` = `p`.`product_id` WHERE `el`.`product_id` = '" . (int)$product_id . "' AND `el`.`status` = '" . (int)$status . "' ORDER BY `el`.`created` DESC" . $sql_limit);
+		$qry = $this->db->query("SELECT `el`.*, `p`.`quantity` FROM `" . DB_PREFIX . "etsy_listing` `el` " 
+ . " LEFT JOIN `" . DB_PREFIX . "product` `p` ON `el`.`product_id` = `p`.`product_id` " 
+ . " WHERE `el`.`product_id` = '" . (int)$product_id . "' AND `el`.`status` = '" . (int)$status . "' " 
+ . " ORDER BY `el`.`created` DESC" . $sql_limit);
 
 		if ($qry->num_rows) {
 			$links = array();
@@ -193,7 +198,9 @@ final class Etsy {
 	}
 
 	public function getLinkedProduct($etsy_item_id) {
-		$qry = $this->db->query("SELECT `p`.`quantity`, `p`.`product_id`, `p`.`model`, `el`.`etsy_listing_id`, `el`.`status` AS `link_status` FROM `" . DB_PREFIX . "etsy_listing` `el` LEFT JOIN `" . DB_PREFIX . "product` `p` ON `p`.`product_id` = `el`.`product_id` WHERE `el`.`etsy_item_id` = '" . (int)$etsy_item_id . "' AND `el`.`status` = 1");
+		$qry = $this->db->query("SELECT `p`.`quantity`, `p`.`product_id`, `p`.`model`, `el`.`etsy_listing_id`, `el`.`status` AS `link_status` FROM `" . DB_PREFIX . "etsy_listing` `el` " 
+ . " LEFT JOIN `" . DB_PREFIX . "product` `p` ON `p`.`product_id` = `el`.`product_id` " 
+ . " WHERE `el`.`etsy_item_id` = '" . (int)$etsy_item_id . "' AND `el`.`status` = 1");
 
 		if($qry->num_rows) {
 			return $qry->row;
@@ -245,14 +252,17 @@ final class Etsy {
 	}
 
 	public function deleteProduct($product_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_listing` WHERE `product_id` = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_listing` " 
+ . " WHERE `product_id` = '" . (int)$product_id . "'");
 	}
 
 	public function deleteLink($etsy_listing_id = null, $etsy_item_id = null) {
 		if ($etsy_listing_id != null) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "etsy_listing` SET `status` = 0 WHERE `etsy_listing_id` = '" . (int)$etsy_listing_id . "' LIMIT 1");
+			$this->db->query("UPDATE `" . DB_PREFIX . "etsy_listing` SET `status` = 0 " 
+ . " WHERE `etsy_listing_id` = '" . (int)$etsy_listing_id . "' LIMIT 1");
 		} elseif ($etsy_item_id != null) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "etsy_listing` SET `status` = 0 WHERE `etsy_item_id` = '" . (int)$etsy_item_id . "' LIMIT 1");
+			$this->db->query("UPDATE `" . DB_PREFIX . "etsy_listing` SET `status` = 0 " 
+ . " WHERE `etsy_item_id` = '" . (int)$etsy_item_id . "' LIMIT 1");
 		}
 	}
 
@@ -281,7 +291,8 @@ final class Etsy {
 	public function orderFind($order_id = null, $receipt_id = null) {
 		if ($order_id != null) {
 			$this->log('Find order id: ' . $order_id);
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 			if($query->num_rows > 0) {
 				$this->log('Found');
@@ -292,7 +303,8 @@ final class Etsy {
 			}
 		} elseif($receipt_id != null) {
 			$this->log('Find receipt id: ' . $receipt_id);
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order` WHERE `receipt_id` = '" . (int)$receipt_id . "' LIMIT 1");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order` " 
+ . " WHERE `receipt_id` = '" . (int)$receipt_id . "' LIMIT 1");
 
 			if($query->num_rows > 0) {
 				$this->log('Found');
@@ -306,7 +318,9 @@ final class Etsy {
 
 	public function orderDelete($order_id) {
 		if(!$this->orderFind($order_id)) {
-			$query = $this->db->query("SELECT `p`.`product_id` FROM `" . DB_PREFIX . "order_product` `op` LEFT JOIN `" . DB_PREFIX . "product` `p` ON `op`.`product_id` = `p`.`product_id` WHERE `op`.`order_id` = '" . (int)$order_id . "'");
+			$query = $this->db->query("SELECT `p`.`product_id` FROM `" . DB_PREFIX . "order_product` `op` " 
+ . " LEFT JOIN `" . DB_PREFIX . "product` `p` ON `op`.`product_id` = `p`.`product_id` " 
+ . " WHERE `op`.`order_id` = '" . (int)$order_id . "'");
 
 			if($query->num_rows > 0) {
 				foreach ($query->rows as $product) {

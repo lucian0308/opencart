@@ -166,11 +166,13 @@ class CatalogModelAccountDownloadTest extends OpenCartTest {
 		);
 
 		$order_id = $this->model_checkout_order->addOrder($order);
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = " . (int)$this->config->get('config_complete_status_id') . " WHERE order_id = " . (int)$order_id);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = " . (int)$this->config->get('config_complete_status_id') . " " 
+ . " WHERE order_id = " . (int)$order_id);
 	}
 
 	public function testGetDownload() {
-		$downloadId = $this->db->query("SELECT download_id FROM `". DB_PREFIX . "download` ORDER BY download_id ASC LIMIT 1")->row['download_id'];
+		$downloadId = $this->db->query("SELECT download_id FROM `". DB_PREFIX . "download` " 
+ . " ORDER BY download_id ASC LIMIT 1")->row['download_id'];
 
 		$download = $this->model_account_download->getDownload($downloadId);
 

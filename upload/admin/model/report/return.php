@@ -4,9 +4,11 @@ class ModelReportReturn extends Model {
 		$sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `" . DB_PREFIX . "return` r";
 
 		if (!empty($data['filter_return_status_id'])) {
-			$sql .= " WHERE r.return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
+			$sql .= " " 
+ . " WHERE r.return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
 		} else {
-			$sql .= " WHERE r.return_status_id > '0'";
+			$sql .= " " 
+ . " WHERE r.return_status_id > '0'";
 		}
 
 		if (!empty($data['filter_date_start'])) {
@@ -25,17 +27,21 @@ class ModelReportReturn extends Model {
 
 		switch($group) {
 			case 'day';
-				$sql .= " GROUP BY YEAR(r.date_added), MONTH(r.date_added), DAY(r.date_added)";
+				$sql .= " " 
+ . " GROUP BY YEAR(r.date_added), MONTH(r.date_added), DAY(r.date_added)";
 				break;
 			default:
 			case 'week':
-				$sql .= " GROUP BY YEAR(r.date_added), WEEK(r.date_added)";
+				$sql .= " " 
+ . " GROUP BY YEAR(r.date_added), WEEK(r.date_added)";
 				break;
 			case 'month':
-				$sql .= " GROUP BY YEAR(r.date_added), MONTH(r.date_added)";
+				$sql .= " " 
+ . " GROUP BY YEAR(r.date_added), MONTH(r.date_added)";
 				break;
 			case 'year':
-				$sql .= " GROUP BY YEAR(r.date_added)";
+				$sql .= " " 
+ . " GROUP BY YEAR(r.date_added)";
 				break;
 		}
 
@@ -80,9 +86,11 @@ class ModelReportReturn extends Model {
 		}
 
 		if (!empty($data['filter_return_status_id'])) {
-			$sql .= " WHERE return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
+			$sql .= " " 
+ . " WHERE return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
 		} else {
-			$sql .= " WHERE return_status_id > '0'";
+			$sql .= " " 
+ . " WHERE return_status_id > '0'";
 		}
 
 		if (!empty($data['filter_date_start'])) {

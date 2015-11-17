@@ -15,9 +15,11 @@ class ModelUserApi extends Model {
 	}
 
 	public function editApi($api_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "api` SET name = '" . $this->db->escape($data['name']) . "', `key` = '" . $this->db->escape($data['key']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE api_id = '" . (int)$api_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "api` SET name = '" . $this->db->escape($data['name']) . "', `key` = '" . $this->db->escape($data['key']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "api_ip WHERE api_id = '" . (int)$api_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "api_ip " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		if (isset($data['api_ip'])) {
 			foreach ($data['api_ip'] as $ip) {
@@ -29,11 +31,13 @@ class ModelUserApi extends Model {
 	}
 
 	public function deleteApi($api_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "api` WHERE api_id = '" . (int)$api_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "api` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 	}
 
 	public function getApi($api_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` WHERE api_id = '" . (int)$api_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		return $query->row;
 	}
@@ -49,9 +53,11 @@ class ModelUserApi extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
+			$sql .= " " 
+ . " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " " 
+ . " ORDER BY name";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -88,13 +94,15 @@ class ModelUserApi extends Model {
 	}
 
 	public function getApiIps($api_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_ip` WHERE api_id = '" . (int)$api_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_ip` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		return $query->rows;
 	}
 
 	public function getApiSessions($api_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_session` WHERE api_id = '" . (int)$api_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api_session` " 
+ . " WHERE api_id = '" . (int)$api_id . "'");
 
 		return $query->rows;
 	}
@@ -104,6 +112,7 @@ class ModelUserApi extends Model {
 	}
 
 	public function deleteApiSession($api_session_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "api_session` WHERE api_session_id = '" . (int)$api_session_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "api_session` " 
+ . " WHERE api_session_id = '" . (int)$api_session_id . "'");
 	}
 }

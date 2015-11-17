@@ -1,7 +1,8 @@
 <?php
 class ModelReportCoupon extends Model {
 	public function getCoupons($data = array()) {
-		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS `orders`, SUM(ch.amount) AS total FROM `" . DB_PREFIX . "coupon_history` ch LEFT JOIN `" . DB_PREFIX . "coupon` c ON (ch.coupon_id = c.coupon_id)";
+		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS `orders`, SUM(ch.amount) AS total FROM `" . DB_PREFIX . "coupon_history` ch " 
+ . " LEFT JOIN `" . DB_PREFIX . "coupon` c ON (ch.coupon_id = c.coupon_id)";
 
 		$implode = array();
 
@@ -14,10 +15,13 @@ class ModelReportCoupon extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sql .= " GROUP BY ch.coupon_id ORDER BY total DESC";
+		$sql .= " " 
+ . " GROUP BY ch.coupon_id " 
+ . " ORDER BY total DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -50,7 +54,8 @@ class ModelReportCoupon extends Model {
 		}
 
 		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+			$sql .= " " 
+ . " WHERE " . implode(" AND ", $implode);
 		}
 
 		$query = $this->db->query($sql);

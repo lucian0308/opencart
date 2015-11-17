@@ -27,9 +27,11 @@ class ModelDesignLayout extends Model {
 	public function editLayout($layout_id, $data) {
 		$this->event->trigger('pre.admin.layout.edit', $data);
 
-		$this->db->query("UPDATE " . DB_PREFIX . "layout SET name = '" . $this->db->escape($data['name']) . "' WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "layout SET name = '" . $this->db->escape($data['name']) . "' " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		if (isset($data['layout_route'])) {
 			foreach ($data['layout_route'] as $layout_route) {
@@ -37,7 +39,8 @@ class ModelDesignLayout extends Model {
 			}
 		}
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_module WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_module " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		if (isset($data['layout_module'])) {
 			foreach ($data['layout_module'] as $layout_module) {
@@ -51,18 +54,25 @@ class ModelDesignLayout extends Model {
 	public function deleteLayout($layout_id) {
 		$this->event->trigger('pre.admin.layout.delete', $layout_id);
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout WHERE layout_id = '" . (int)$layout_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE layout_id = '" . (int)$layout_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_module WHERE layout_id = '" . (int)$layout_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "information_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_module " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "category_to_layout " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "information_to_layout " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		$this->event->trigger('post.admin.layout.delete', $layout_id);
 	}
 
 	public function getLayout($layout_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "layout WHERE layout_id = '" . (int)$layout_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "layout " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		return $query->row;
 	}
@@ -73,9 +83,11 @@ class ModelDesignLayout extends Model {
 		$sort_data = array('name');
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];
+			$sql .= " " 
+ . " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " " 
+ . " ORDER BY name";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -102,13 +114,15 @@ class ModelDesignLayout extends Model {
 	}
 
 	public function getLayoutRoutes($layout_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "layout_route WHERE layout_id = '" . (int)$layout_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "layout_route " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		return $query->rows;
 	}
 
 	public function getLayoutModules($layout_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "layout_module WHERE layout_id = '" . (int)$layout_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "layout_module " 
+ . " WHERE layout_id = '" . (int)$layout_id . "'");
 
 		return $query->rows;
 	}

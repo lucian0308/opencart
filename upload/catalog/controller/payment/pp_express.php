@@ -196,7 +196,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 				$this->session->data['shipping_postcode'] = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
 
-				$country_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' AND `status` = '1' LIMIT 1")->row;
+				$country_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` " 
+ . " WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' AND `status` = '1' LIMIT 1")->row;
 
 				if ($country_info) {
 					$this->session->data['guest']['shipping']['country_id'] = $country_info['country_id'];
@@ -230,7 +231,8 @@ class ControllerPaymentPPExpress extends Controller {
 					$returned_shipping_zone = '';
 				}
 
-				$zone_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE (`name` = '" . $this->db->escape($returned_shipping_zone) . "' OR `code` = '" . $this->db->escape($returned_shipping_zone) . "') AND `status` = '1' AND `country_id` = '" . (int)$country_info['country_id'] . "' LIMIT 1")->row;
+				$zone_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` " 
+ . " WHERE (`name` = '" . $this->db->escape($returned_shipping_zone) . "' OR `code` = '" . $this->db->escape($returned_shipping_zone) . "') AND `status` = '1' AND `country_id` = '" . (int)$country_info['country_id'] . "' LIMIT 1")->row;
 
 				if ($zone_info) {
 					$this->session->data['guest']['shipping']['zone'] = $zone_info['name'];
@@ -315,8 +317,10 @@ class ControllerPaymentPPExpress extends Controller {
 					unset($shipping_name[0]);
 					$shipping_last_name = implode(' ', $shipping_name);
 
-					$country_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' AND `status` = '1' LIMIT 1")->row;
-					$zone_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE `name` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOSTATE']) . "' AND `status` = '1' AND `country_id` = '" . (int)$country_info['country_id'] . "'")->row;
+					$country_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` " 
+ . " WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' AND `status` = '1' LIMIT 1")->row;
+					$zone_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` " 
+ . " WHERE `name` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOSTATE']) . "' AND `status` = '1' AND `country_id` = '" . (int)$country_info['country_id'] . "'")->row;
 
 					$address_data = array(
 						'firstname'  => $shipping_first_name,
@@ -1632,10 +1636,12 @@ class ControllerPaymentPPExpress extends Controller {
 
 				//if the transaction is pending but the new status is completed
 				if ($transaction['payment_status'] != $this->request->post['payment_status']) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = '" . $this->request->post['payment_status'] . "' WHERE `transaction_id` = '" . $this->db->escape($transaction['transaction_id']) . "' LIMIT 1");
+					$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = '" . $this->request->post['payment_status'] . "' " 
+ . " WHERE `transaction_id` = '" . $this->db->escape($transaction['transaction_id']) . "' LIMIT 1");
 				} elseif ($transaction['payment_status'] == 'Pending' && ($transaction['pending_reason'] != $this->request->post['pending_reason'])) {
 					//payment is still pending but the pending reason has changed, update it.
-					$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `pending_reason` = '" . $this->request->post['pending_reason'] . "' WHERE `transaction_id` = '" . $this->db->escape($transaction['transaction_id']) . "' LIMIT 1");
+					$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `pending_reason` = '" . $this->request->post['pending_reason'] . "' " 
+ . " WHERE `transaction_id` = '" . $this->db->escape($transaction['transaction_id']) . "' LIMIT 1");
 				}
 			} else {
 				if ($this->config->get('pp_express_debug') == 1) {
@@ -1671,9 +1677,11 @@ class ControllerPaymentPPExpress extends Controller {
 					 */
 					if (isset($this->request->post['payment_status']) && $this->request->post['payment_status'] == 'Refunded') {
 						if (($this->request->post['mc_gross'] * -1) == $parent_transaction['amount']) {
-							$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = 'Refunded' WHERE `transaction_id` = '" . $this->db->escape($parent_transaction['transaction_id']) . "' LIMIT 1");
+							$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = 'Refunded' " 
+ . " WHERE `transaction_id` = '" . $this->db->escape($parent_transaction['transaction_id']) . "' LIMIT 1");
 						} else {
-							$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = 'Partially-Refunded' WHERE `transaction_id` = '" . $this->db->escape($parent_transaction['transaction_id']) . "' LIMIT 1");
+							$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET `payment_status` = 'Partially-Refunded' " 
+ . " WHERE `transaction_id` = '" . $this->db->escape($parent_transaction['transaction_id']) . "' LIMIT 1");
 						}
 					}
 
@@ -1738,7 +1746,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 						//as there was a payment the recurring is active, ensure it is set to active (may be been suspended before)
 						if ($recurring['status'] != 1) {
-							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
+							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
 						}
 					}
 				}
@@ -1749,7 +1758,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 					if ($recurring != false) {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '6'");
-						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 3 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
+						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 3 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
 					}
 				}
 
@@ -1759,7 +1769,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 					if ($recurring != false) {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '7'");
-						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 3 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
+						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 3 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
 					}
 				}
 
@@ -1790,7 +1801,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 						//as there was a payment the recurring is active, ensure it is set to active (may be been suspended before)
 						if ($recurring['status'] != 1) {
-							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
+							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
 						}
 					}
 				}
@@ -1803,7 +1815,8 @@ class ControllerPaymentPPExpress extends Controller {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '0'");
 
 						if ($recurring['status'] != 1) {
-							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
+							$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 2 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "'");
 						}
 					}
 				}
@@ -1814,7 +1827,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 					if ($recurring != false && $recurring['status'] != 3) {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '5'");
-						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 4 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
+						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 4 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
 					}
 				}
 
@@ -1833,7 +1847,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 					if ($recurring != false) {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '9'");
-						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 5 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
+						$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 5 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
 					}
 				}
 			}
@@ -1890,7 +1905,8 @@ class ControllerPaymentPPExpress extends Controller {
 
 			if (isset($result['PROFILEID'])) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', `date_added` = NOW(), `type` = '5'");
-				$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 4 WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
+				$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = 4 " 
+ . " WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' LIMIT 1");
 
 				$this->session->data['success'] = $this->language->get('text_cancelled');
 			} else {

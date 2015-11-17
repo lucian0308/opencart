@@ -52,7 +52,8 @@ class ModelOpenbayEtsyOrder extends Model {
 	public function updateOrderStatus($order_id, $status_id) {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_history` (`order_id`, `order_status_id`, `notify`, `comment`, `date_added`) VALUES (" . (int)$order_id . ", " . (int)$status_id . ", 0, '', NOW())");
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `order_status_id` = " . (int)$status_id . " WHERE `order_id` = " . (int)$order_id);
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `order_status_id` = " . (int)$status_id . " " 
+ . " WHERE `order_id` = " . (int)$order_id);
 	}
 
 	public function updatePaid($order_id, $status) {
@@ -60,7 +61,8 @@ class ModelOpenbayEtsyOrder extends Model {
 			$this->updateOrderStatus($order_id, $this->config->get('etsy_order_status_paid'));
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "etsy_order` SET `paid` = " . (int)$status . " WHERE `order_id` = " . (int)$order_id);
+		$this->db->query("UPDATE `" . DB_PREFIX . "etsy_order` SET `paid` = " . (int)$status . " " 
+ . " WHERE `order_id` = " . (int)$order_id);
 	}
 
 	public function updateShipped($order_id, $status) {
@@ -68,13 +70,15 @@ class ModelOpenbayEtsyOrder extends Model {
 			$this->updateOrderStatus($order_id, $this->config->get('etsy_order_status_shipped'));
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "etsy_order` SET `shipped` = " . (int)$status . " WHERE `order_id` = " . (int)$order_id);
+		$this->db->query("UPDATE `" . DB_PREFIX . "etsy_order` SET `shipped` = " . (int)$status . " " 
+ . " WHERE `order_id` = " . (int)$order_id);
 	}
 
 	public function modifyStock($product_id, $qty, $symbol = '-') {
 		$this->openbay->etsy->log('modifyStock() - Updating stock. Product id: ' . $product_id . ' qty: ' . $qty . ', symbol: ' . $symbol);
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = (`quantity` " . $this->db->escape((string)$symbol) . " " . (int)$qty . ") WHERE `product_id` = '" . (int)$product_id . "' AND `subtract` = '1'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = (`quantity` " . $this->db->escape((string)$symbol) . " " . (int)$qty . ") " 
+ . " WHERE `product_id` = '" . (int)$product_id . "' AND `subtract` = '1'");
 	}
 
 	private function lockAdd($order_id) {
@@ -82,11 +86,13 @@ class ModelOpenbayEtsyOrder extends Model {
 	}
 
 	private function lockDelete($order_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_order_lock` WHERE `order_id` = '" . (int)$order_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "etsy_order_lock` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "'");
 	}
 
 	private function lockExists($order_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order_lock` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "etsy_order_lock` " 
+ . " WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
 
 		if ($query->num_rows > 0) {
 			return true;
@@ -103,7 +109,8 @@ class ModelOpenbayEtsyOrder extends Model {
 		$customer_name = $this->openbay->splitName($order->name);
 
 		if (!empty($order->country->iso)){
-			$country_qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE `iso_code_2` = '" . $this->db->escape($order->country->iso) . "'");
+			$country_qry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` " 
+ . " WHERE `iso_code_2` = '" . $this->db->escape($order->country->iso) . "'");
 		}
 
 		if (!empty($country_qry->num_rows)){
@@ -118,63 +125,7 @@ class ModelOpenbayEtsyOrder extends Model {
 			$country_address_format = $this->config->get('etsy_address_format');
 		}
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET
-		   `invoice_prefix`           = '" . $this->db->escape($this->config->get('config_invoice_prefix')) . "',
-		   `store_id`                 = '" . (int)$this->config->get('config_store_id') . "',
-		   `store_name`               = '" . $this->db->escape($this->config->get('config_name') . ' / Etsy') . "',
-		   `store_url`                = '" . $this->db->escape($this->config->get('config_url')) . "',
-		   `customer_id`              = 0,
-		   `customer_group_id`        = 0,
-		   `firstname`				  = '" . $this->db->escape((string)$customer_name['firstname']) . "',
-		   `lastname`				  = '" . $this->db->escape((string)$customer_name['surname']) . "',
-		   `email`				  	  = '" . $this->db->escape((string)$order->buyer_email) . "',
-		   `telephone`				  = '',
-		   `fax`				  	  = '',
-		   `payment_firstname`		  = '" . $this->db->escape((string)$customer_name['firstname']) . "',
-		   `payment_lastname`		  = '" . $this->db->escape((string)$customer_name['surname']) . "',
-		   `payment_company`		  = '',
-		   `payment_address_1`		  = '" . $this->db->escape((string)$order->address_1) . "',
-		   `payment_address_2`		  = '" . $this->db->escape((string)$order->address_2) . "',
-		   `payment_city`			  = '" . $this->db->escape((string)$order->address_city) . "',
-		   `payment_postcode`		  = '" . $this->db->escape((string)$order->address_zip) . "',
-		   `payment_country`		  = '" . $this->db->escape((string)$country_name) . "',
-		   `payment_country_id`		  = '" . $this->db->escape((string)$country_id) . "',
-		   `payment_zone`			  = '" . $this->db->escape((string)$order->address_state) . "',
-		   `payment_zone_id`		  = '" . (int)$zone_id . "',
-		   `payment_address_format`	  = '" . $this->db->escape((string)$country_address_format) . "',
-		   `payment_method`	  		  = '" . $this->db->escape((string)$order->payment_method_name) . "',
-		   `payment_code`	  		  = '',
-		   `shipping_firstname`		  = '" . $this->db->escape((string)$customer_name['firstname']) . "',
-		   `shipping_lastname`		  = '" . $this->db->escape((string)$customer_name['surname']) . "',
-		   `shipping_address_1`		  = '" . $this->db->escape((string)$order->address_1) . "',
-		   `shipping_address_2`		  = '" . $this->db->escape((string)$order->address_2) . "',
-		   `shipping_city`			  = '" . $this->db->escape((string)$order->address_city) . "',
-		   `shipping_postcode`		  = '" . $this->db->escape((string)$order->address_zip) . "',
-		   `shipping_country`		  = '" . $this->db->escape((string)$country_name) . "',
-		   `shipping_country_id`	  = '" . $this->db->escape((string)$country_id) . "',
-		   `shipping_zone`			  = '" . $this->db->escape((string)$order->address_state) . "',
-		   `shipping_zone_id`		  = '" . (int)$zone_id . "',
-		   `shipping_address_format`  = '" . $this->db->escape((string)$country_address_format) . "',
-		   `shipping_method`  		  = '',
-		   `shipping_code`  		  = '',
-		   `comment`                  = '" . $this->db->escape((string)$order->buyer_note) . "',
-		   `total`                    = '" . (double)$order->amount_total . "',
-		   `order_status_id`          = '',
-		   `affiliate_id`          	  = '',
-		   `commission`          	  = '',
-		   `marketing_id`          	  = '',
-		   `tracking`          	  	  = '',
-		   `language_id`              = '" . (int)$this->config->get('config_language_id') . "',
-		   `currency_id`              = '" . (int)$currency['currency_id'] . "',
-		   `currency_code`            = '" . $this->db->escape($currency_code) . "',
-		   `currency_value`           = 1,
-		   `ip`           			  = '',
-		   `forwarded_ip`             = '',
-		   `user_agent`               = '',
-		   `accept_language`          = '',
-		   `date_added`               = NOW(),
-		   `date_modified`            = NOW()
-		");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET `invoice_prefix` = '" . $this->db->escape($this->config->get('config_invoice_prefix')) . "', `store_id` = '" . (int)$this->config->get('config_store_id') . "', `store_name` = '" . $this->db->escape($this->config->get('config_name') . ' / Etsy') . "', `store_url` = '" . $this->db->escape($this->config->get('config_url')) . "', `customer_id` = 0, `customer_group_id` = 0, `firstname` = '" . $this->db->escape((string)$customer_name['firstname']) . "', `lastname` = '" . $this->db->escape((string)$customer_name['surname']) . "', `email` = '" . $this->db->escape((string)$order->buyer_email) . "', `telephone` = '', `fax` = '', `payment_firstname` = '" . $this->db->escape((string)$customer_name['firstname']) . "', `payment_lastname` = '" . $this->db->escape((string)$customer_name['surname']) . "', `payment_company` = '', `payment_address_1` = '" . $this->db->escape((string)$order->address_1) . "', `payment_address_2` = '" . $this->db->escape((string)$order->address_2) . "', `payment_city` = '" . $this->db->escape((string)$order->address_city) . "', `payment_postcode` = '" . $this->db->escape((string)$order->address_zip) . "', `payment_country` = '" . $this->db->escape((string)$country_name) . "', `payment_country_id` = '" . $this->db->escape((string)$country_id) . "', `payment_zone` = '" . $this->db->escape((string)$order->address_state) . "', `payment_zone_id` = '" . (int)$zone_id . "', `payment_address_format` = '" . $this->db->escape((string)$country_address_format) . "', `payment_method` = '" . $this->db->escape((string)$order->payment_method_name) . "', `payment_code` = '', `shipping_firstname` = '" . $this->db->escape((string)$customer_name['firstname']) . "', `shipping_lastname` = '" . $this->db->escape((string)$customer_name['surname']) . "', `shipping_address_1` = '" . $this->db->escape((string)$order->address_1) . "', `shipping_address_2` = '" . $this->db->escape((string)$order->address_2) . "', `shipping_city` = '" . $this->db->escape((string)$order->address_city) . "', `shipping_postcode` = '" . $this->db->escape((string)$order->address_zip) . "', `shipping_country` = '" . $this->db->escape((string)$country_name) . "', `shipping_country_id` = '" . $this->db->escape((string)$country_id) . "', `shipping_zone` = '" . $this->db->escape((string)$order->address_state) . "', `shipping_zone_id` = '" . (int)$zone_id . "', `shipping_address_format` = '" . $this->db->escape((string)$country_address_format) . "', `shipping_method` = '', `shipping_code` = '', `comment` = '" . $this->db->escape((string)$order->buyer_note) . "', `total` = '" . (double)$order->amount_total . "', `order_status_id` = '', `affiliate_id` = '', `commission` = '', `marketing_id` = '', `tracking` = '', `language_id` = '" . (int)$this->config->get('config_language_id') . "', `currency_id` = '" . (int)$currency['currency_id'] . "', `currency_code` = '" . $this->db->escape($currency_code) . "', `currency_value` = 1, `ip` = '', `forwarded_ip` = '', `user_agent` = '', `accept_language` = '', `date_added` = NOW(), `date_modified` = NOW() ");
 
 		$order_id = $this->db->getLastId();
 
@@ -189,17 +140,7 @@ class ModelOpenbayEtsyOrder extends Model {
 				$product_model = '';
 			}
 
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET
-			   `order_id`		= '" . (int)$order_id . "',
-			   `product_id`		= '" . (int)$product_id . "',
-			   `name`			= '" . $this->db->escape((string)$transaction->title) . "',
-			   `model`			= '" . $this->db->escape($product_model) . "',
-			   `quantity`		= '" . (int)$transaction->quantity . "',
-			   `price`			= '" . (int)$transaction->price . "',
-			   `total`			= '" . (int)$transaction->price * (int)$transaction->quantity . "',
-			   `tax`			= '',
-			   `reward`			= ''
-		   ");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET `order_id` = '" . (int)$order_id . "', `product_id` = '" . (int)$product_id . "', `name` = '" . $this->db->escape((string)$transaction->title) . "', `model` = '" . $this->db->escape($product_model) . "', `quantity` = '" . (int)$transaction->quantity . "', `price` = '" . (int)$transaction->price . "', `total` = '" . (int)$transaction->price * (int)$transaction->quantity . "', `tax` = '', `reward` = '' ");
 
 			if ($product_id != 0) {
 				$this->modifyStock($product_id, (int)$transaction->quantity);

@@ -15,7 +15,8 @@ class ModelLocalisationReturnReason extends Model {
 	}
 
 	public function editReturnReason($return_reason_id, $data) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE return_reason_id = '" . (int)$return_reason_id . "'");
 
 		foreach ($data['return_reason'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "return_reason SET return_reason_id = '" . (int)$return_reason_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
@@ -25,22 +26,26 @@ class ModelLocalisationReturnReason extends Model {
 	}
 
 	public function deleteReturnReason($return_reason_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE return_reason_id = '" . (int)$return_reason_id . "'");
 
 		$this->cache->delete('return_reason');
 	}
 
 	public function getReturnReason($return_reason_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE return_reason_id = '" . (int)$return_reason_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
 	public function getReturnReasons($data = array()) {
 		if ($data) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "return_reason WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			$sql = "SELECT * FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sql .= " ORDER BY name";
+			$sql .= " " 
+ . " ORDER BY name";
 
 			if (isset($data['return']) && ($data['return'] == 'DESC')) {
 				$sql .= " DESC";
@@ -67,7 +72,9 @@ class ModelLocalisationReturnReason extends Model {
 			$return_reason_data = $this->cache->get('return_reason.' . (int)$this->config->get('config_language_id'));
 
 			if (!$return_reason_data) {
-				$query = $this->db->query("SELECT return_reason_id, name FROM " . DB_PREFIX . "return_reason WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY name");
+				$query = $this->db->query("SELECT return_reason_id, name FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' " 
+ . " ORDER BY name");
 
 				$return_reason_data = $query->rows;
 
@@ -81,7 +88,8 @@ class ModelLocalisationReturnReason extends Model {
 	public function getReturnReasonDescriptions($return_reason_id) {
 		$return_reason_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE return_reason_id = '" . (int)$return_reason_id . "'");
 
 		foreach ($query->rows as $result) {
 			$return_reason_data[$result['language_id']] = array('name' => $result['name']);
@@ -91,7 +99,8 @@ class ModelLocalisationReturnReason extends Model {
 	}
 
 	public function getTotalReturnReasons() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "return_reason WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "return_reason " 
+ . " WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['total'];
 	}

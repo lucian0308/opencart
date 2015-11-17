@@ -3,7 +3,9 @@ class ModelExtensionExtension extends Model {
 	public function getInstalled($type) {
 		$extension_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = '" . $this->db->escape($type) . "' ORDER BY code");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension " 
+ . " WHERE `type` = '" . $this->db->escape($type) . "' " 
+ . " ORDER BY code");
 
 		foreach ($query->rows as $result) {
 			$extension_data[] = $result['code'];
@@ -17,6 +19,7 @@ class ModelExtensionExtension extends Model {
 	}
 
 	public function uninstall($type, $code) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "extension WHERE `type` = '" . $this->db->escape($type) . "' AND `code` = '" . $this->db->escape($code) . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "extension " 
+ . " WHERE `type` = '" . $this->db->escape($type) . "' AND `code` = '" . $this->db->escape($code) . "'");
 	}
 }
